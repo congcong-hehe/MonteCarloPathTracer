@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonteCarloPathTracer", "MonteCarloPathTracer\MonteCarloPathTracer.vcxproj", "{E46F77B7-6901-4297-A7B3-CE7475A6AB87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Debug|x64.ActiveCfg = Debug|x64
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Debug|x64.Build.0 = Debug|x64
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Debug|x86.ActiveCfg = Debug|Win32
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Debug|x86.Build.0 = Debug|Win32
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Release|x64.ActiveCfg = Release|x64
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Release|x64.Build.0 = Release|x64
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Release|x86.ActiveCfg = Release|Win32
+		{E46F77B7-6901-4297-A7B3-CE7475A6AB87}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {464BBE80-049F-48B0-9941-E143F8993168}
+	EndGlobalSection
+EndGlobal
