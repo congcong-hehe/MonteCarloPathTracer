@@ -22,11 +22,11 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BVH.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Color.h" />
     <ClInclude Include="external\rgbe.h" />
     <ClInclude Include="external\stb_image.h" />
+    <ClInclude Include="external\stb_image_write.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="ImageTexture.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Ray.h" />
@@ -35,6 +35,7 @@
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Tri.h" />
     <ClInclude Include="TriMesh.h" />
+    <ClInclude Include="utility.h" />
     <ClInclude Include="UV.h" />
     <ClInclude Include="Vec3f.h" />
     <ClInclude Include="Vertex.h" />
@@ -43,8 +44,7 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="external\rgbe.cpp" />
-    <ClCompile Include="global.cpp" />
-    <ClCompile Include="ImageTexture.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Render.cpp" />

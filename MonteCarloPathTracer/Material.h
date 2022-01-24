@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Vec3f.h"
-#include "Color.h"
-#include "ImageTexture.h"
+#include "Image.h"
 
 /*
 Kd: r g b …¢…‰π‚ diffuse color
@@ -18,7 +17,7 @@ public:
 	Vec3f Ks;
 	int Ns = 0;
 	Vec3f Le;
-	std::shared_ptr<ImageTexture> image_texture = nullptr;
+	std::shared_ptr<Image> image_texture = nullptr;
 
 	bool isLight();
 	bool isSpecular();

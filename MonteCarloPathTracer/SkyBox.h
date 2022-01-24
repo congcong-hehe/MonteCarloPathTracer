@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Color.h"
 #include "Ray.h"
 
 class SkyBox

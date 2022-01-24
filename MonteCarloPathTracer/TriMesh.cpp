@@ -136,7 +136,7 @@ void TriMesh::LoadMtlFile(std::string file_path, std::string file_name)
 		{
 			std::string texture_name;
 			is >> texture_name;
-			materials_[material_index]->image_texture = std::make_shared<ImageTexture>(file_path + texture_name);
+			materials_[material_index]->image_texture = std::make_shared<Image>(file_path + texture_name);
 		}
 	}
 

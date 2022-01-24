@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "SkyBox.h"
 #include "external/rgbe.h"
 #include <stdio.h>

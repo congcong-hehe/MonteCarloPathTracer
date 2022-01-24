@@ -1,5 +1,6 @@
 #include "BVH.h"
 #include <algorithm>
+#include "utility.h"
 
 inline bool aabbXCompare(const AABB& aabb1, const AABB& aabb2)
 {
@@ -104,36 +105,36 @@ bool BVH::getIntersectPoint(Ray& ray, float &t, Intersection& intersection, std:
 bool BVH::rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 {
 	Vec3f s = ray.origin - tri.v0.pos;
-	Vec3f s1 = ray.direction.cross(tri.edge2);
-	Vec3f s2 = s.cross(tri.edge1);
+	Vec3f s1 = cross(ray.direction, tri.edge2);
+	Vec3f s2 = cross(s, tri.edge1);
 
-	float a = s1.dot(tri.edge1);
+	float a = dot(s1, tri.edge1);
 
 	if (std::fabs(a) < epsilon)
 	{
 		return false;
 	}
 
-	float t = s2.dot(tri.edge2) / a;
+	float t = dot(s2, tri.edge2) / a;
 	if (t < 0)
 	{
 		return false;
 	}
 
-	float b1 = s1.dot(s) / a;
+	float b1 = dot(s1, s) / a;
 	if (b1 < 0 || b1 > 1)
 	{
 		return false;
 	}
 
-	float b2 = s2.dot(ray.direction) / a;
+	float b2 = dot(s2, ray.direction) / a;
 	if (b2 < 0 || b1 + b2 > 1)
 	{
 		return false;
 	}
 
 	Vec3f normal = (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
-	if (ray.direction.dot(normal) > 0)
+	if (dot(ray.direction, normal) > 0)
 	{
 		return false;
 	}

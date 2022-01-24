@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include <limits.h>
+#include "utility.h"
 
 Scene::~Scene()
 {
@@ -89,7 +90,7 @@ Vec3f Scene::MonteCarloSample(Intersection& p, Vec3f &wo)
 bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec3f &wi)
 {
 	Intersection q;
-	if (wi.dot(p.normal) < 0 || wi.dot(x.normal) > 0)
+	if (dot(wi, p.normal) < 0 || dot(wi,x.normal) > 0)
 	{
 		return true;
 	}
@@ -134,8 +135,8 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 				continue;
 			}
 
-			float theta = p.normal.dot(wi);
-			float thetap = x.normal.dot(-wi);
+			float theta = dot(p.normal,wi);
+			float thetap = dot(x.normal, -wi);
 
 			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) * theta * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
 		}
@@ -158,7 +159,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 		{
 			if (!x.material->isLight())
 			{
-				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal)* wi.dot(p.normal) / pdf_hemi / p_RR;
+				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal)* dot(wi, p.normal) / pdf_hemi / p_RR;
 			}
 		}
 	}

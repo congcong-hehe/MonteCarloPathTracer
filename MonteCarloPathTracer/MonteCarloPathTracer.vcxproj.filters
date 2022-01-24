@@ -13,12 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="external">
+      <UniqueIdentifier>{77494a9a-8cc7-4cb2-9eeb-9ffb6e3f6ffb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tri.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Ray.h">
@@ -60,16 +60,22 @@
     <ClInclude Include="AABB.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="external\stb_image.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageTexture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="external\stb_image.h">
+      <Filter>external</Filter>
+    </ClInclude>
     <ClInclude Include="external\rgbe.h">
+      <Filter>external</Filter>
+    </ClInclude>
+    <ClInclude Include="external\stb_image_write.h">
+      <Filter>external</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,19 +101,16 @@
     <ClCompile Include="Tri.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="global.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="AABB.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageTexture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SkyBox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="external\rgbe.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

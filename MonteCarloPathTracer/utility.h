@@ -1,8 +1,10 @@
-#include "global.h"
+#pragma once
+
+
 #include <random>
 #include <time.h>
 
-float getRandFloatNum(float left, float right)
+inline float getRandFloatNum(float left, float right)
 {
 	std::random_device dev;
 	std::mt19937 rng(dev());
@@ -11,7 +13,7 @@ float getRandFloatNum(float left, float right)
 	return dis(rng);
 }
 
-int getRandIntNum(int left, int right)
+inline int getRandIntNum(int left, int right)
 {
 	std::random_device dev;
 	std::mt19937 rng(dev());

@@ -14,7 +14,7 @@ bool Material::isSpecular()
 
 Vec3f Material::brdf(Vec3f& wi, Vec3f& wo, std::shared_ptr<Material> material, Vec3f& norm)
 {
-    if (wi.dot(norm) > 0)
+    if (dot(wi, norm) > 0)
     {
         return Kd / PI;
     }

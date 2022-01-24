@@ -1,7 +1,6 @@
 #pragma once
 #include "TriMesh.h"
 #include "BVH.h"
-#include "Color.h"
 #include "Ray.h"
 #include "Intersection.h"
 #include "SkyBox.h"

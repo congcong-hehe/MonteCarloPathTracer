@@ -9,12 +9,12 @@ int main()
 	clock_t begin, end;
 
 	// cornellbox
-	int width = 50, height = 50;
+	int width = 64, height = 64;
 	Vec3f position(0.f, 0.f, 2.5f);
 	Vec3f lookAt(0.f, 0.f, 0.f);
 	Vec3f up(0.f, 1.0f, 0.f);
 	float fov = 60.0f;
-	std::string file_path = std::string("../image/") + "cornellbox.ppm";
+	std::string file_path = std::string("../image/") + "cornellbox.png";
 	TriMesh* triMesh = new TriMesh;
 	triMesh->LoadMtlFile("../example-scenes/cornellbox/", "cornellbox.mtl");
 	triMesh->LoadObjFile("../example-scenes/cornellbox/", "cornellbox.obj");

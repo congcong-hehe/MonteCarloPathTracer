@@ -4,69 +4,30 @@
 
 struct Vec3f
 {
-	float x, y, z;
+	union
+	{
+		struct { float x, y, z; };
+		struct { float r, g, b; };
+		struct { float Vec[3]; };
+	};
 
 	Vec3f(float _x = 0, float _y = 0, float _z = 0) : x(_x), y(_y), z(_z) {}
-
-	Vec3f operator - ()
-	{
-		return Vec3f(-x, -y, -z);
-	}
-
-	Vec3f operator + (const Vec3f& v)
-	{
-		return Vec3f(x + v.x, y + v.y, z + v.z);
-	}
-
-	Vec3f operator += (const Vec3f& v)
-	{
-		x += v.x; y += v.y; z += v.z;
-		return *this;
-	}
-
-	Vec3f operator - (const Vec3f& v)
-	{
-		return Vec3f(x - v.x, y - v.y, z - v.z);
-	}
-
-	Vec3f operator / (const float a)
-	{
-		return Vec3f(x / a, y / a, z / a);
-	}
-
-	Vec3f operator * (const float a)
-	{
-		return Vec3f(x * a, y * a, z * a);
-	}
-
-	Vec3f operator * (const Vec3f& v)
-	{
-		return Vec3f(x * v.x, y * v.y, z * v.z);
-	}
-
-	float norm()
-	{
-		return (float)sqrt(x * x + y * y + z * z);
-	}
-
-	Vec3f& normalization()
-	{
-		*this = (*this) / norm();
-		return *this;
-	}
-
-	float dot(const Vec3f& v)
-	{
-		return x * v.x + y * v.y + z * v.z;
-	}
-
-	Vec3f cross(const Vec3f& v)
-	{
-		return Vec3f(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
-	}
-
-	void print()
-	{
-		std::cout << x << " " << y << " " << z << std::endl;
-	}
+	Vec3f operator - ()	const { return Vec3f(-x, -y, -z); }
+	Vec3f operator + (const Vec3f& v) const { return Vec3f(x + v.x, y + v.y, z + v.z);  }
+	Vec3f operator - (const Vec3f& v) const { return Vec3f(x - v.x, y - v.y, z - v.z); }
+	Vec3f operator / (const float a) const { return Vec3f(x / a, y / a, z / a); }
+	Vec3f operator * (const float a) const { return Vec3f(x * a, y * a, z * a); }
+	Vec3f& operator += (const Vec3f& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vec3f& operator /= (const float a) { x /= a; y /= a; z /= a; return *this; }
+	Vec3f operator * (const Vec3f& v) const { return Vec3f(x * v.x, y * v.y, z * v.z); }
+	float norm() const { return (float)sqrt(x * x + y * y + z * z); }
+	Vec3f& normalization() { float a = norm(); x /= a; y /= a; z /= a; return *this; }
+	void print() const { printf("%f %f %f\n", x, y, z); }
 };
+
+inline float dot(const Vec3f& v1, const Vec3f& v2) { return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; }
+inline Vec3f cross(const Vec3f& v1, const Vec3f& v2) {
+	return Vec3f(v1.y * v2.z - v2.y * v1.z, v1.z * v2.x - v2.z * v1.x, v1.x * v2.y - v2.x * v1.y);
+}
+
+using Color = Vec3f;

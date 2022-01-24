@@ -1,4 +1,5 @@
 #include "Tri.h"
+#include "utility.h"
 
 void Tri::init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt)
 {
@@ -17,7 +18,7 @@ void Tri::init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> 
 	edge1 = v1.pos - v0.pos;
 	edge2 = v2.pos - v0.pos;
 
-	area = edge1.cross(edge2).norm() * 0.5f;
+	area = cross(edge1,edge2).norm() * 0.5f;
 }
 
 // 采样光源，从光源上随机采一点，得到交点和采样概率，pdf = 1 / area
