@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec3f.h"
+#include "Vec.h"
 #include "Image.h"
 
 /*
@@ -19,9 +19,24 @@ public:
 	Vec3f Le;
 	std::shared_ptr<Image> image_texture = nullptr;
 
-	bool isLight();
-	bool isSpecular();
-	Vec3f brdf(Vec3f& wi, Vec3f& wo, std::shared_ptr<Material> material, Vec3f &norm);
-	Color getTextureColor(float u, float v);
+	bool isLight()
+	{
+		return Le.x > epsilon && Le.y > epsilon && Le.z > epsilon;
+	}
+
+	bool isSpecular()
+	{
+		return Ks.x > epsilon && Ks.y > epsilon && Ks.z > epsilon;
+	}
+
+	Vec3f brdf(Vec3f& wi, Vec3f& wo, std::shared_ptr<Material> material, Vec3f& norm)
+	{
+		return dot(wi, norm) > 0 ? Kd : Vec3f(0, 0, 0);
+	}
+
+	Color getTextureColor(float u, float v)
+	{
+		return image_texture != nullptr ? image_texture->getColor(u, v) : Vec3f(0.0, 0.0, 0.0);
+	}
 };
 

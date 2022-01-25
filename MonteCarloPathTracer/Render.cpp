@@ -1,8 +1,9 @@
 #include "Render.h"
 #include <fstream>
+#include "utility.h"
 
-Render::Render(int w, int h, Color back_color, Camera camera)
-	: width_(w), height_(h)
+Render::Render(int w, int h, Color back_color, Camera camera, int spp)
+	: width_(w), height_(h), spp_(spp)
 {
 	origin_ = camera.position;
 	Vec3f direction = (camera.lookAt - camera.position).normalization();
@@ -36,28 +37,21 @@ Ray Render::getRay(float x, float y)
 // 渲染场景
 void Render::render(Scene& scene)
 {
-	int spp_sqrt = 1;
-	int spp = spp_sqrt * spp_sqrt;	// samples per pixel
-	float offset = 1.0f / spp_sqrt;
- 
-	//#pragma omp parallel for
+	#pragma omp parallel for num_threads(4)
 	for (int x = 0; x < width_; ++x)
 	{
 		printf("%d\n", x);
 		for (int y = 0; y < height_; ++y)
 		{
-
-			// 投射光线， 计算framebuffer
 			Color color;
-			for (int i = 0; i < spp_sqrt; ++i)
+			for (int i = 0; i < spp_; ++i)
 			{
-				for (int j = 0; j < spp_sqrt; ++j)
-				{
-					Ray ray = getRay(x + offset / 2.0f + i * offset, y + offset / 2.0f + j * offset);	// 生成一条光线
-					color += scene.castRay(ray) / (float)spp;
-				}
+				float x_offset = getRandFloatNum(0, 1);
+				float y_offset = getRandFloatNum(0, 1);
+				Ray ray = getRay(x + x_offset, y + y_offset);
+				color += scene.castRay(ray);
 			}
-			framebuffer_.setColor(height_ - y - 1, x, color);
+			framebuffer_.setColor(height_ - y - 1, x, color / spp_);
 		}
 	}
 }

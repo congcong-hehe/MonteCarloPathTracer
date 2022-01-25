@@ -24,7 +24,7 @@ void Scene::buildBVH()
 }
 
 // 投射一根光线，得到光线的redience
-Color Scene::castRay(Ray& ray)
+Color Scene::castRayBVH(Ray& ray)
 {
 	Color pixel_radience = Color(0, 0, 0);
 
@@ -59,6 +59,62 @@ Color Scene::castRay(Ray& ray)
 
 	return pixel_radience;
 }
+
+// 不使用包围盒加速
+Color Scene::castRay(Ray& ray)
+{
+	Color pixel_radience = Color(0, 0, 0);
+
+	Intersection intersection;
+
+	float t_min = FLT_MAX;
+	for (int i = 0; i < triMeshs_.size(); ++i)
+	{
+		TriMesh* trimesh = triMeshs_[i];
+		for (int j = 0; j < trimesh->tris_.size(); ++j)
+		{
+			Intersection inter_tmep;
+			auto tri = trimesh->tris_[j];
+			bool tag = rayTriIntersect(ray, *tri, inter_tmep);
+			if (tag && ray.t < t_min)
+			{
+				intersection = inter_tmep;
+				t_min = ray.t;
+			}
+		}
+	}
+
+	if (t_min != FLT_MAX)	// 如果光线和三角网格有交点
+	{
+		if (intersection.material->image_texture != nullptr)
+		{
+			pixel_radience = intersection.material->getTextureColor(intersection.uv.u, intersection.uv.v);
+		}
+		else if (!intersection.material->isLight())	// 如果没有打到光源上
+		{
+			pixel_radience = trace(intersection, -ray.direction, 1);
+		}
+		else
+		{
+			pixel_radience = intersection.material->Le;
+		}
+	}
+	else
+	{
+		if (skybox_ != nullptr)
+		{
+			pixel_radience = skybox_->sample(ray);
+		}
+	}
+
+
+	pixel_radience.x = pixel_radience.x < 1.0f ? pixel_radience.x : 1.0f;
+	pixel_radience.y = pixel_radience.y < 1.0f ? pixel_radience.y : 1.0f;
+	pixel_radience.z = pixel_radience.z < 1.0f ? pixel_radience.z : 1.0f;
+
+	return pixel_radience;
+}
+
 
 
 Vec3f Scene::MonteCarloSample(Intersection& p, Vec3f &wo)

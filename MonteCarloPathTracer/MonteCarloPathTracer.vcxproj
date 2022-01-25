@@ -22,9 +22,6 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BVH.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="external\rgbe.h" />
-    <ClInclude Include="external\stb_image.h" />
-    <ClInclude Include="external\stb_image_write.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
@@ -36,8 +33,7 @@
     <ClInclude Include="Tri.h" />
     <ClInclude Include="TriMesh.h" />
     <ClInclude Include="utility.h" />
-    <ClInclude Include="UV.h" />
-    <ClInclude Include="Vec3f.h" />
+    <ClInclude Include="Vec.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +42,6 @@
     <ClCompile Include="external\rgbe.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SkyBox.cpp" />
@@ -166,6 +161,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\study_data\pro\mypro\PathTracing\MonteCarloPathTracer\MonteCarloPathTracer\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

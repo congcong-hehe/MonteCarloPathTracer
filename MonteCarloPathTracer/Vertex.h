@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Vec3f.h"
-#include "UV.h"
+#include "Vec.h"
 
 struct Vertex
 {

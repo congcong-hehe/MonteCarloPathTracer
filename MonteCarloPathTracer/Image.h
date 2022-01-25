@@ -4,7 +4,7 @@
 #pragma once
 
 #include <string>
-#include "Vec3f.h"
+#include "Vec.h"
 
 class Image {
 public:

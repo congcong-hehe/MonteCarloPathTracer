@@ -3,5 +3,5 @@
 #include <math.h>
 #include <memory>
 
-const float PI = acos(-1.0f);
+const float PI = 3.1415926535f;
 const float epsilon = 0.00001f;

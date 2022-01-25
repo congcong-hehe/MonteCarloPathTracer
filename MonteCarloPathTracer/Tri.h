@@ -3,6 +3,7 @@
 #include <vector>
 #include "Vertex.h"
 #include "Intersection.h"
+#include "Ray.h"
 
 class Tri
 {
@@ -16,5 +17,8 @@ public:
 
 	void init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt);
 	void sampleLight(Intersection &x, float &pdf);
+
 };
+
+bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection);
 

@@ -24,6 +24,5 @@ public:
 	void build(std::vector<TriMesh*>& triMeshs);
 	bool intersection(Ray& ray, Intersection& inter);
 	bool getIntersectPoint(Ray& ray, float& t, Intersection& intersection, std::shared_ptr<Bvh_Node> bvh_node);	// 得到光线和场景相交的最近点，后面用BVH加速？
-	bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection);		// 判断光线和三角形是否相交
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec3f.h"
+#include "Vec.h"
 #include "Material.h"
 
 // 光线和三角面片的交点类

@@ -27,10 +27,7 @@
     <ClInclude Include="TriMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Vec3f.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="UV.h">
+    <ClInclude Include="Vec.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
@@ -63,15 +60,6 @@
     <ClInclude Include="SkyBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="external\stb_image.h">
-      <Filter>external</Filter>
-    </ClInclude>
-    <ClInclude Include="external\rgbe.h">
-      <Filter>external</Filter>
-    </ClInclude>
-    <ClInclude Include="external\stb_image_write.h">
-      <Filter>external</Filter>
-    </ClInclude>
     <ClInclude Include="Image.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -93,9 +81,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Tri.cpp">

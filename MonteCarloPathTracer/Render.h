@@ -14,13 +14,14 @@ public:
 	Vec3f view_x_, view_y_, view_z_;	// 将屏幕坐标转换到世界坐标
 	int count_ = 0;	// 记录渲染的进度
 
-	Render(int w, int h, Color back_color, Camera camera);
+	Render(int w, int h, Color back_color, Camera camera, int spp_sqrt);
 
 	void render(Scene& scene);
 	Ray getRay(float x, float y);
 	void writeImage(const std::string file_path);
 
 private:
+	int spp_;
 	Image framebuffer_;
 };
 

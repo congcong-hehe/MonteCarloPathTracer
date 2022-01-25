@@ -1,4 +1,5 @@
 #include "AABB.h"
+#include "utility.h"
 
 AABB::AABB(std::shared_ptr<Tri> tri)
 {
@@ -52,12 +53,5 @@ bool AABB::hit(Ray& ray)
 	t_enter = std::min(t_min, t_enter);
 	t_exit = std::max(t_max, t_exit);
 
-	if (t_enter <= t_exit && t_exit >= 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return t_enter <= t_exit && t_exit >= 0;
 }
