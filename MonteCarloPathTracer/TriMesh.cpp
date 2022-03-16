@@ -45,7 +45,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 		{
 			Vec3f norm;
 			is >> norm.x >> norm.y >> norm.z;
-			vns.push_back(norm);
+			vns.push_back(norm.normalization());
 		}
 		if (tag == "f")
 		{

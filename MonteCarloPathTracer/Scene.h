@@ -11,7 +11,7 @@ public:
 	std::vector<TriMesh*> triMeshs_;	// 场景中的三角形网格
 	BVH* bvh_ = nullptr;
 	SkyBox* skybox_ = nullptr;
-	int max_depth_ = 3;		// 路径追踪的最大深度
+	int max_depth_ = 5;		// 路径追踪的最大深度
 	float p_RR = 0.6f;	// possibility of Russian Roulette	俄罗斯轮盘转
 
 	~Scene();
@@ -23,5 +23,6 @@ public:
 	Color trace(Intersection& p, Vec3f wo, int depth);	// 追踪光线
 	Vec3f MonteCarloSample(Intersection& p, Vec3f &wo);	// 在所在平面的半球上随机找一条出射方向
 	bool isLightBlock(Intersection &p, Intersection &x, Vec3f &wi);	// 判断光线是否被遮挡
+	bool getIntersection(Ray& ray, Intersection& intersection);		// 遍历所有的三角面片得到相交面片
 };
 

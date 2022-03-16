@@ -60,13 +60,8 @@ Color Scene::castRayBVH(Ray& ray)
 	return pixel_radience;
 }
 
-// 不使用包围盒加速
-Color Scene::castRay(Ray& ray)
+bool Scene::getIntersection(Ray& ray, Intersection& intersection)
 {
-	Color pixel_radience = Color(0, 0, 0);
-
-	Intersection intersection;
-
 	float t_min = FLT_MAX;
 	for (int i = 0; i < triMeshs_.size(); ++i)
 	{
@@ -83,8 +78,17 @@ Color Scene::castRay(Ray& ray)
 			}
 		}
 	}
+	return t_min != FLT_MAX;
+}
 
-	if (t_min != FLT_MAX)	// 如果光线和三角网格有交点
+// 不使用包围盒加速
+Color Scene::castRay(Ray& ray)
+{
+	Color pixel_radience = Color(0, 0, 0);
+
+	Intersection intersection;
+
+	if (getIntersection(ray, intersection))	// 如果光线和三角网格有交点
 	{
 		if (intersection.material->image_texture != nullptr)
 		{
@@ -152,7 +156,7 @@ bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec3f &wi)
 	}
 
 	Ray ray(p.position, wi, 1.0f);
-	if (bvh_->intersection(ray, q))
+	if (getIntersection(ray, q))
 	{
 		if ((x.position - q.position).norm() > epsilon)
 		{
@@ -194,7 +198,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 			float theta = dot(p.normal,wi);
 			float thetap = dot(x.normal, -wi);
 
-			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) * theta * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
+			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) /** theta*/ * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
 		}
 	}
 
@@ -205,7 +209,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;
-	if (bvh_->intersection(newRay, x))		// 如果光线打到场景中的非光源点x
+	if (getIntersection(newRay, x))		// 如果光线打到场景中的非光源点x
 	{
 		if (getRandFloatNum(0, 1) > p_RR)	// 俄罗斯轮盘转测试
 		{
@@ -215,7 +219,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 		{
 			if (!x.material->isLight())
 			{
-				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal)* dot(wi, p.normal) / pdf_hemi / p_RR;
+				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal)/** dot(wi, p.normal) *// pdf_hemi / p_RR;
 			}
 		}
 	}
@@ -227,8 +231,8 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 		}
 	}
 
-	Color tex_color = p.material->getTextureColor(p.uv.u, p.uv.v) * p.material->brdf(wi, wo, p.material, p.normal);
+	//Color tex_color = p.material->getTextureColor(p.uv.u, p.uv.v) * p.material->brdf(wi, wo, p.material, p.normal);
 
-	return light_dir + light_indir + tex_color;
+	return light_dir + light_indir;// +tex_color;
 }
  

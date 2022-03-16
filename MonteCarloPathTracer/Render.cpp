@@ -37,6 +37,15 @@ Ray Render::getRay(float x, float y)
 // ‰÷»æ≥°æ∞
 void Render::render(Scene& scene)
 {
+	std::vector<float> x_rand(spp_);
+	std::vector<float> y_rand(spp_);
+
+	for (int i = 0; i < spp_; ++i)
+	{
+		x_rand[i] = getRandFloatNum(0, 1);
+		y_rand[i] = getRandFloatNum(0, 1);
+	}
+
 	#pragma omp parallel for num_threads(4)
 	for (int x = 0; x < width_; ++x)
 	{
@@ -46,9 +55,7 @@ void Render::render(Scene& scene)
 			Color color;
 			for (int i = 0; i < spp_; ++i)
 			{
-				float x_offset = getRandFloatNum(0, 1);
-				float y_offset = getRandFloatNum(0, 1);
-				Ray ray = getRay(x + x_offset, y + y_offset);
+				Ray ray = getRay(x + x_rand[i], y + y_rand[i]);
 				color += scene.castRay(ray);
 			}
 			framebuffer_.setColor(height_ - y - 1, x, color / spp_);
