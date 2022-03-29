@@ -1,11 +1,11 @@
 #include "AABB.h"
 #include "utility.h"
 
-AABB::AABB(std::shared_ptr<Tri> tri)
+AABB::AABB(Tri &tri)
 {
-	Vec3f& pos0 = tri->v0.pos;
-	Vec3f& pos1 = tri->v1.pos;
-	Vec3f& pos2 = tri->v2.pos;
+	Vec3f& pos0 = tri.v0.pos;
+	Vec3f& pos1 = tri.v1.pos;
+	Vec3f& pos2 = tri.v2.pos;
 
 	v_min_.x = std::min(pos0.x, std::min(pos1.x, pos2.x));
 	v_min_.y = std::min(pos0.y, std::min(pos1.y, pos2.y));
@@ -15,10 +15,10 @@ AABB::AABB(std::shared_ptr<Tri> tri)
 	v_max_.y = std::max(pos0.y, std::max(pos1.y, pos2.y));
 	v_max_.z = std::max(pos0.z, std::max(pos1.z, pos2.z));
 
-	this->tri_ = tri;
+	this->tri_ = &tri;
 }
 
-AABB AABB::add(AABB& aabb)
+AABB AABB::add(AABB& aabb) const
 {
 	AABB new_aabb;
 
@@ -33,7 +33,7 @@ AABB AABB::add(AABB& aabb)
 	return new_aabb;
 }
 
-bool AABB::hit(Ray& ray)
+bool AABB::hit(Ray& ray) const
 {
 	float t_enter = FLT_MAX, t_exit = -FLT_MAX;
 	float t_min, t_max;

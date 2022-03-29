@@ -3,15 +3,22 @@
 #include "TriMesh.h"
 #include "Render.h"
 #include "SkyBox.h"
+#include "utility.h"
 
 void cornellbox();
 void car();
 void diningroom();
 
+#if DEBUG
+extern int count_tri_light_inter;
+#endif
 int main()
 {
 	cornellbox();
 
+#if DEBUG
+	printf("%d\n", count_tri_light_inter);
+#endif
 	return 0;
 }
 

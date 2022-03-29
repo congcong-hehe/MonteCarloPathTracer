@@ -16,7 +16,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 	assert(in);
 
 	std::string line;
-	std::shared_ptr<Material> curr_material = nullptr;
+	Material* curr_material = nullptr;
 	int count = 0;
 	while (std::getline(in, line))
 	{
@@ -49,7 +49,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 		}
 		if (tag == "f")
 		{
-			std::shared_ptr<Tri> tri = std::make_shared<Tri>();
+			Tri tri;
 			int v[3];
 			int vn[3];
 			int vt[3];
@@ -61,9 +61,9 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 				vn[i] --;
 				vt[i] --;
 			}
-			tri->material = curr_material;
+			tri.material = curr_material;
 
-			tri->init(vs, vns, vts, v, vn, vt);
+			tri.init(vs, vns, vts, v, vn, vt);
 			tris_.push_back(tri);
 
 			if (curr_material->isLight())	// 如果是光源的三角面片，将属于光源的面片加入系列
@@ -76,7 +76,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 		{
 			std::string mat_name;
 			is >> mat_name;
-			curr_material = material_map_[mat_name];
+			curr_material = &materials_[material_map_[mat_name]];
 		}
 	}
 	num_tris_ = tris_.size();
@@ -104,39 +104,38 @@ void TriMesh::LoadMtlFile(std::string file_path, std::string file_name)
 
 		if (tag == "newmtl")
 		{
-			std::shared_ptr<Material> material = std::make_shared<Material>();
 			std::string mat_name;
 			is >> mat_name;
 			material_index = materials_.size();
-			materials_.push_back(material);
-			material_map_[mat_name] = material;
+			materials_.push_back(Material());
+			material_map_[mat_name] = material_index;
 		}
 
-		if (tag == "Kd")
+		else if (tag == "Kd")
 		{
-			is >> materials_[material_index]->Kd.x >> materials_[material_index]->Kd.y >> materials_[material_index]->Kd.z;
+			is >> materials_[material_index].Kd.x >> materials_[material_index].Kd.y >> materials_[material_index].Kd.z;
 		}
 
-		if (tag == "Ks")
+		else if (tag == "Ks")
 		{
-			is >> materials_[material_index]->Ks.x >> materials_[material_index]->Ks.y >> materials_[material_index]->Ks.z;
+			is >> materials_[material_index].Ks.x >> materials_[material_index].Ks.y >> materials_[material_index].Ks.z;
 		}
 
-		if (tag == "Le")
+		else if (tag == "Le")
 		{
-			is >> materials_[material_index]->Le.x >> materials_[material_index]->Le.y >> materials_[material_index]->Le.z;
+			is >> materials_[material_index].Le.x >> materials_[material_index].Le.y >> materials_[material_index].Le.z;
 		}
 
-		if (tag == "Ns")
+		else if (tag == "Ns")
 		{
-			is >> materials_[material_index]->Ns;
+			is >> materials_[material_index].Ns;
 		}
 
-		if (tag == "map_Kd")
+		else if (tag == "map_Kd")
 		{
 			std::string texture_name;
 			is >> texture_name;
-			materials_[material_index]->image_texture = std::make_shared<Image>(file_path + texture_name);
+			materials_[material_index].image_texture = new Image(file_path + texture_name);
 		}
 	}
 

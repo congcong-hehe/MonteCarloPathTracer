@@ -10,7 +10,7 @@ class Tri
 public:
 	Vertex v0, v1, v2;
 
-	std::shared_ptr<Material> material = nullptr;	// 三角形的材质
+	Material* material = nullptr;	// 三角形的材质
 	Vec3f edge1;
 	Vec3f edge2;
 	float area = 0.0f;

@@ -3,6 +3,8 @@
 #include <random>
 #include <time.h>
 
+#define DEBUG true
+
 inline float getRandFloatNum(float left, float right)
 {
 	std::random_device dev;

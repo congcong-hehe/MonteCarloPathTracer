@@ -25,7 +25,7 @@ void Render::writeImage(const std::string file_path)
 	framebuffer_.write(file_path);
 }
 
-Ray Render::getRay(float x, float y)
+Ray Render::getRay(float x, float y) const
 {
 	float x_float = x / width_;
 	float y_float = y / height_;
@@ -35,7 +35,7 @@ Ray Render::getRay(float x, float y)
 }
 
 // ‰÷»æ≥°æ∞
-void Render::render(Scene& scene)
+void Render::render(Scene& scene) const
 {
 	std::vector<float> x_rand(spp_);
 	std::vector<float> y_rand(spp_);
@@ -46,7 +46,9 @@ void Render::render(Scene& scene)
 		y_rand[i] = getRandFloatNum(0, 1);
 	}
 
-	#pragma omp parallel for num_threads(1)
+#if !DEBUG
+	#pragma omp parallel for num_threads(4)
+#endif
 	for (int x = 0; x < width_; ++x)
 	{
 		printf("%d\n", x);

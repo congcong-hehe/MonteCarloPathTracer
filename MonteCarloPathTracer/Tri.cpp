@@ -1,6 +1,10 @@
 #include "Tri.h"
 #include "utility.h"
 
+#if DEBUG
+int count_tri_light_inter = 0;	// 统计光线和三角形求交的次数
+#endif
+
 void Tri::init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt)
 {
 	v0.norm = vns[vn[0]];
@@ -40,6 +44,10 @@ void Tri::sampleLight(Intersection &x, float &pdf)
 // 求光线和三角形的交点
 bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 {
+#if DEBUG
+	count_tri_light_inter++;
+#endif
+
 	Vec3f s = ray.origin - tri.v0.pos;
 	Vec3f s1 = cross(ray.direction, tri.edge2);
 	Vec3f s2 = cross(s, tri.edge1);

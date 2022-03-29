@@ -16,8 +16,8 @@ public:
 
 	Render(int w, int h, Color back_color, Camera camera, int spp_sqrt);
 
-	void render(Scene& scene);
-	Ray getRay(float x, float y);
+	void render(Scene& scene) const;
+	Ray getRay(float x, float y) const;
 	void writeImage(const std::string file_path);
 
 private:

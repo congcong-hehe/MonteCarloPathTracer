@@ -18,19 +18,28 @@ public:
 	Vec3f Ks;
 	int Ns = 0;
 	Vec3f Le;
-	std::shared_ptr<Image> image_texture = nullptr;
+	Image* image_texture = nullptr;
 
-	bool isLight()
+	~Material()
+	{
+		if (nullptr != image_texture)
+		{
+			delete image_texture;
+			image_texture = nullptr;
+		}
+	}
+
+	bool isLight() const
 	{
 		return Le.x > epsilon && Le.y > epsilon && Le.z > epsilon;
 	}
 
-	bool isSpecular()
+	bool isSpecular() const
 	{
 		return Ks.x > epsilon && Ks.y > epsilon && Ks.z > epsilon;
 	}
 
-	Vec3f brdf(Vec3f& wi, Vec3f& wo, std::shared_ptr<Material> material, Vec3f& norm)
+	Vec3f brdf(Vec3f& wi, Vec3f& wo, Material* material, Vec3f& norm)
 	{
 		if (dot(wi, norm) > 0)
 		{

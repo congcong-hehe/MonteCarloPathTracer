@@ -4,7 +4,11 @@
 
 Scene::~Scene()
 {
-	if (bvh_) delete bvh_;
+	if (bvh_)
+	{
+		delete bvh_;
+		bvh_ = nullptr;
+	}
 }
 
 void Scene::add(TriMesh* triMesh)
@@ -52,10 +56,7 @@ Color Scene::castRayBVH(Ray& ray)
 		}
 	}
 	
-
-	pixel_radience.x = pixel_radience.x < 1.0f ? pixel_radience.x : 1.0f;
-	pixel_radience.y = pixel_radience.y < 1.0f ? pixel_radience.y : 1.0f;
-	pixel_radience.z = pixel_radience.z < 1.0f ? pixel_radience.z : 1.0f;
+	clampColor(pixel_radience);
 
 	return pixel_radience;
 }
@@ -69,8 +70,8 @@ bool Scene::getIntersection(Ray& ray, Intersection& intersection)
 		for (int j = 0; j < trimesh->tris_.size(); ++j)
 		{
 			Intersection inter_tmep;
-			auto tri = trimesh->tris_[j];
-			bool tag = rayTriIntersect(ray, *tri, inter_tmep);
+			auto &tri = trimesh->tris_[j];
+			bool tag = rayTriIntersect(ray, tri, inter_tmep);
 			if (tag && ray.t < t_min)
 			{
 				intersection = inter_tmep;
@@ -179,12 +180,12 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 	for (int i = 0; i < triMeshs_.size(); ++i)
 	{
 		TriMesh* triMesh = triMeshs_[i];
-		auto light_tris = triMesh->light_tris_;
+		auto &light_tris = triMesh->light_tris_;
 		for (int j = 0; j < light_tris.size(); ++j)
 		{
 			Intersection x;
 			float pdf;	// possibility distribution function 概率分布函数
-			light_tris[j]->sampleLight(x, pdf);		// 从光源中采样得到点的信息和采样概率
+			light_tris[j].sampleLight(x, pdf);		// 从光源中采样得到点的信息和采样概率
 			Vec3f wi = (x.position - p.position).normalization();	// 入射方向
 
 			if (isLightBlock(p, x, wi))	// 如果光源被遮住
