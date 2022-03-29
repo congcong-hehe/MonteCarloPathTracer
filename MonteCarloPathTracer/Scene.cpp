@@ -111,10 +111,7 @@ Color Scene::castRay(Ray& ray)
 		}
 	}
 
-
-	pixel_radience.x = pixel_radience.x < 1.0f ? pixel_radience.x : 1.0f;
-	pixel_radience.y = pixel_radience.y < 1.0f ? pixel_radience.y : 1.0f;
-	pixel_radience.z = pixel_radience.z < 1.0f ? pixel_radience.z : 1.0f;
+	clampColor(pixel_radience);
 
 	return pixel_radience;
 }

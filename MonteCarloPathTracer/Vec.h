@@ -21,7 +21,10 @@ struct Vec3f
 	Vec3f& operator /= (const float a) { x /= a; y /= a; z /= a; return *this; }
 	Vec3f operator * (const Vec3f& v) const { return Vec3f(x * v.x, y * v.y, z * v.z); }
 	float norm() const { return (float)sqrt(x * x + y * y + z * z); }
-	Vec3f& normalization() { float a = norm(); x /= a; y /= a; z /= a; return *this; }
+	Vec3f& normalization() {  
+		if (x * x + y * y + z * z == 0.f) return *this;
+		float a = norm(); x /= a; y /= a; z /= a;  return *this; 
+	}
 	void print() const { printf("%f %f %f\n", x, y, z); }
 };
 

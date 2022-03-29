@@ -46,7 +46,7 @@ void Render::render(Scene& scene)
 		y_rand[i] = getRandFloatNum(0, 1);
 	}
 
-	#pragma omp parallel for num_threads(4)
+	#pragma omp parallel for num_threads(1)
 	for (int x = 0; x < width_; ++x)
 	{
 		printf("%d\n", x);

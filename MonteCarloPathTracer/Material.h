@@ -36,7 +36,7 @@ public:
 		{
 			/*return Kd * std::max(0.0f, dot(wi, norm)) + 
 				Ks * std::pow(std::max(dot(((wi + wo) / 2).normalization(), norm), 0.0f), Ns);*/
-			return Kd;
+			return Kd / PI;
 		}
 		else
 		{

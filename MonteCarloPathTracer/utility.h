@@ -20,3 +20,16 @@ inline int getRandIntNum(int left, int right)
 
 	return dis(rng);
 }
+
+inline void clamp(float &a, const float left, const float right)
+{
+	a = a > left ? a : left;
+	a = a < right ? a : right;
+}
+
+inline void clampColor(Vec3f& color)
+{
+	clamp(color.x, 0.0f, 1.0f);
+	clamp(color.y, 0.0f, 1.0f);
+	clamp(color.z, 0.0f, 1.0f);
+}

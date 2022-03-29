@@ -31,7 +31,7 @@ void cornellbox()
 	Scene scene;
 	scene.add(triMesh);
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 100);
+	Render render(width, height, Color(1, 0, 0), camera, 10);
 	scene.buildBVH();
 	begin = clock();
 	render.render(scene);
