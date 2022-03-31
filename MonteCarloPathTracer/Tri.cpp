@@ -5,7 +5,7 @@
 int count_tri_light_inter = 0;	// 统计光线和三角形求交的次数
 #endif
 
-void Tri::init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt)
+void Tri::init(std::vector<Vec> &vs, std::vector<Vec> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt)
 {
 	v0.norm = vns[vn[0]];
 	v1.norm = vns[vn[1]];
@@ -48,9 +48,9 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 	count_tri_light_inter++;
 #endif
 
-	Vec3f s = ray.origin - tri.v0.pos;
-	Vec3f s1 = cross(ray.direction, tri.edge2);
-	Vec3f s2 = cross(s, tri.edge1);
+	Vec s = ray.origin - tri.v0.pos;
+	Vec s1 = cross(ray.direction, tri.edge2);
+	Vec s2 = cross(s, tri.edge1);
 
 	float a = dot(s1, tri.edge1);
 
@@ -77,7 +77,7 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 		return false;
 	}
 
-	Vec3f normal = (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
+	Vec normal = (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
 	if (dot(ray.direction, normal) > 0)
 	{
 		return false;

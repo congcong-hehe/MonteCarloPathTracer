@@ -45,7 +45,7 @@
     <ClInclude Include="Intersection.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="global.h">
+    <ClInclude Include="Global.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
@@ -63,7 +63,7 @@
     <ClInclude Include="Image.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="utility.h">
+    <ClInclude Include="Utility.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ClCompile Include="TriMesh.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Render.cpp">

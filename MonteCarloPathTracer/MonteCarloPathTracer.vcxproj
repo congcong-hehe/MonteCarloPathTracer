@@ -22,7 +22,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BVH.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="global.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Material.h" />
@@ -32,7 +32,7 @@
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Tri.h" />
     <ClInclude Include="TriMesh.h" />
-    <ClInclude Include="utility.h" />
+    <ClInclude Include="Utility.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="external\rgbe.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SkyBox.cpp" />

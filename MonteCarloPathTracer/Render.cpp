@@ -6,9 +6,9 @@ Render::Render(int w, int h, Color back_color, Camera camera, int spp)
 	: width_(w), height_(h), spp_(spp)
 {
 	origin_ = camera.position;
-	Vec3f direction = (camera.lookAt - camera.position).normalization();
-	Vec3f right = cross(direction, camera.up).normalization();
-	Vec3f up = cross(right, direction).normalization();
+	Vec direction = (camera.lookAt - camera.position).normalization();
+	Vec right = cross(direction, camera.up).normalization();
+	Vec up = cross(right, direction).normalization();
 
 	float aspect = (float)width_ / (float)height_;
 	view_y_ = up * 2.0f * std::tan(camera.fov * PI / 360.f);
@@ -29,7 +29,7 @@ Ray Render::getRay(float x, float y) const
 {
 	float x_float = x / width_;
 	float y_float = y / height_;
-	Vec3f direction = (view_z_ + view_x_ * (x_float - 0.5f) + view_y_ * (y_float - 0.5f)).normalization();
+	Vec direction = (view_z_ + view_x_ * (x_float - 0.5f) + view_y_ * (y_float - 0.5f)).normalization();
 
 	return Ray(origin_, direction, 1.0f);
 }

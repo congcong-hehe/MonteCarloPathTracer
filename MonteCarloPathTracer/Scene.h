@@ -20,9 +20,9 @@ public:
 	void buildBVH();
 	Color castRayBVH(Ray& ray);		// 投射一根光线，返回光线的radience
 	Color castRay(Ray& ray);
-	Color trace(Intersection& p, Vec3f wo, int depth);	// 追踪光线
-	Vec3f MonteCarloSample(Intersection& p, Vec3f &wo);	// 在所在平面的半球上随机找一条出射方向
-	bool isLightBlock(Intersection &p, Intersection &x, Vec3f &wi);	// 判断光线是否被遮挡
+	Color trace(Intersection& p, Vec wo, int depth);	// 追踪光线
+	Vec MonteCarloSample(Intersection& p, Vec &wo);	// 在所在平面的半球上随机找一条出射方向
+	bool isLightBlock(Intersection &p, Intersection &x, Vec &wi);	// 判断光线是否被遮挡
 	bool getIntersection(Ray& ray, Intersection& intersection);		// 遍历所有的三角面片得到相交面片
 };
 

@@ -11,11 +11,11 @@ public:
 	Vertex v0, v1, v2;
 
 	Material* material = nullptr;	// 三角形的材质
-	Vec3f edge1;
-	Vec3f edge2;
+	Vec edge1;
+	Vec edge2;
 	float area = 0.0f;
 
-	void init(std::vector<Vec3f> &vs, std::vector<Vec3f> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt);
+	void init(std::vector<Vec> &vs, std::vector<Vec> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt);
 	void sampleLight(Intersection &x, float &pdf);
 
 };

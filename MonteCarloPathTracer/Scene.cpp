@@ -119,33 +119,33 @@ Color Scene::castRay(Ray& ray)
 
 
 
-Vec3f Scene::MonteCarloSample(Intersection& p, Vec3f &wo)
+Vec Scene::MonteCarloSample(Intersection& p, Vec &wo)
 {
 	// 在局部坐标系中半球上产生随机的方向
 	float u1 = getRandFloatNum(0, 1), u2 = getRandFloatNum(0, 1);
 	float z = std::fabs(1 - 2.0f * u1);
 	float r = std::sqrt(std::max(0.0f, 1 - z * z));
 	float phi = 2 * PI * u2;
-	Vec3f local_wi = Vec3f(r * std::cos(phi), r * std::sin(phi), z);
+	Vec local_wi = Vec(r * std::cos(phi), r * std::sin(phi), z);
 
 	// 在世界坐标系下
-	Vec3f B, C;
-	Vec3f &normal = p.normal;
+	Vec B, C;
+	Vec &normal = p.normal;
 	if (std::fabs(normal.x) > std::fabs(normal.y))
 	{
 		float inv_len = 1.0f / std::sqrt(normal.x * normal.x + normal.z * normal.z);
-		C = Vec3f(normal.z * inv_len, 0.0f, -normal.x * inv_len);
+		C = Vec(normal.z * inv_len, 0.0f, -normal.x * inv_len);
 	}
 	else
 	{
 		float inv_len = 1.0f / std::sqrt(normal.y * normal.y + normal.z * normal.z);
-		C = Vec3f(0.0f, normal.z * inv_len, -normal.y * inv_len);
+		C = Vec(0.0f, normal.z * inv_len, -normal.y * inv_len);
 	}
 
 	return B * local_wi.x + C * local_wi.y + normal * local_wi.z;
 }
 
-bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec3f &wi)
+bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
 {
 	Intersection q;
 	if (dot(wi, p.normal) < 0 || dot(wi,x.normal) > 0)
@@ -165,7 +165,7 @@ bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec3f &wi)
 	return false;
 }
 
-Color Scene::trace(Intersection& p, Vec3f wo, int depth)
+Color Scene::trace(Intersection& p, Vec wo, int depth)
 {
 	// 如果超过最大的追踪深度
 	if (depth > max_depth_)
@@ -186,7 +186,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 			Intersection x;
 			float pdf;	// possibility distribution function 概率分布函数
 			light_tris[j].sampleLight(x, pdf);		// 从光源中采样得到点的信息和采样概率
-			Vec3f wi = (x.position - p.position).normalization();	// 入射方向
+			Vec wi = (x.position - p.position).normalization();	// 入射方向
 
 			if (isLightBlock(p, x, wi))	// 如果光源被遮住
 			{
@@ -203,7 +203,7 @@ Color Scene::trace(Intersection& p, Vec3f wo, int depth)
 	// 从其他的反射物采样 
 	// 在半球面上随机产生一个方向
 	float pdf_hemi = 0.5f / PI;	// 在半球上的采样概率
-	Vec3f wi = MonteCarloSample(p, wo).normalization();
+	Vec wi = MonteCarloSample(p, wo).normalization();
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;

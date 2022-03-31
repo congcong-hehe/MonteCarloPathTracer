@@ -13,9 +13,9 @@ public:
     ~Image();
     bool read(const std::string &file_path);
     bool write(const std::string &file_path) const;
-    Vec3f getColor(const int u, const int v) const;
-    Vec3f getColor(const float u, const float v) const;
-    void setColor(const int u, const int v, const Vec3f &color) const;
+    Vec getColor(const int u, const int v) const;
+    Vec getColor(const float u, const float v) const;
+    void setColor(const int u, const int v, const Vec &color) const;
     bool init();
 
     int getHeight() const { return height_; }

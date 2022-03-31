@@ -3,9 +3,9 @@
 
 AABB::AABB(Tri &tri)
 {
-	Vec3f& pos0 = tri.v0.pos;
-	Vec3f& pos1 = tri.v1.pos;
-	Vec3f& pos2 = tri.v2.pos;
+	Vec& pos0 = tri.v0.pos;
+	Vec& pos1 = tri.v1.pos;
+	Vec& pos2 = tri.v2.pos;
 
 	v_min_.x = std::min(pos0.x, std::min(pos1.x, pos2.x));
 	v_min_.y = std::min(pos0.y, std::min(pos1.y, pos2.y));

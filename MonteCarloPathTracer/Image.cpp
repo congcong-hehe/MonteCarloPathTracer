@@ -50,20 +50,20 @@ bool Image::write(const string &file_path) const {
     }
 }
 
-Vec3f Image::getColor(const int u, const int v) const {
+Vec Image::getColor(const int u, const int v) const {
     assert(u < height_ && u >= 0);
     assert(v < width_ && v >= 0);
 
     float scale = 1/255.0f;
     int index = u * channels_ * width_ + v * channels_;
-    return Vec3f(scale * data_[index], scale * data_[index + 1], scale * data_[index + 2]);
+    return Vec(scale * data_[index], scale * data_[index + 1], scale * data_[index + 2]);
 }
 
-Vec3f Image::getColor(const float u, const float v) const {
+Vec Image::getColor(const float u, const float v) const {
     return getColor(static_cast<int>(u * height_), static_cast<int>(v * width_));
 }
 
-void Image::setColor(const int u, const int v, const Vec3f &color) const {
+void Image::setColor(const int u, const int v, const Vec &color) const {
     assert(u < height_ && u >= 0);
     assert(v < width_ && v >= 0);
 

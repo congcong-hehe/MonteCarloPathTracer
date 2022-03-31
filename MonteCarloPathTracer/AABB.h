@@ -8,8 +8,8 @@
 class AABB
 {
 public:
-	Vec3f v_min_;
-	Vec3f v_max_;
+	Vec v_min_;
+	Vec v_max_;
 	Tri *tri_ = nullptr;
 
 	AABB() {}

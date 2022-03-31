@@ -14,10 +14,10 @@ Le: r g b ¹âÁÁ¶È
 class Material
 {
 public:
-	Vec3f Kd;
-	Vec3f Ks;
+	Vec Kd;
+	Vec Ks;
 	int Ns = 0;
-	Vec3f Le;
+	Vec Le;
 	Image* image_texture = nullptr;
 
 	~Material()
@@ -39,7 +39,7 @@ public:
 		return Ks.x > epsilon && Ks.y > epsilon && Ks.z > epsilon;
 	}
 
-	Vec3f brdf(Vec3f& wi, Vec3f& wo, Material* material, Vec3f& norm)
+	Vec brdf(Vec& wi, Vec& wo, Material* material, Vec& norm)
 	{
 		if (dot(wi, norm) > 0)
 		{
@@ -49,7 +49,7 @@ public:
 		}
 		else
 		{
-			return Vec3f(0, 0, 0);
+			return Vec(0, 0, 0);
 		}
 	}
 

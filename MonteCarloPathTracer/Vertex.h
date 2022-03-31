@@ -4,7 +4,7 @@
 
 struct Vertex
 {
-	Vec3f pos;	
-	Vec3f norm;
+	Vec pos;	
+	Vec norm;
 	UV uv;
 };

@@ -6,8 +6,8 @@
 
 void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 {
-	std::vector<Vec3f> vs;
-	std::vector<Vec3f> vns;
+	std::vector<Vec> vs;
+	std::vector<Vec> vns;
 	std::vector<UV> vts;
 
 	file_name = file_path + file_name;
@@ -27,7 +27,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 
 		if (tag == "v")
 		{
-			Vec3f pos;
+			Vec pos;
 			is >> pos.x >> pos.y >> pos.z;
 			vs.push_back(pos);
 		}
@@ -43,7 +43,7 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 		}
 		if (tag == "vn")
 		{
-			Vec3f norm;
+			Vec norm;
 			is >> norm.x >> norm.y >> norm.z;
 			vns.push_back(norm.normalization());
 		}

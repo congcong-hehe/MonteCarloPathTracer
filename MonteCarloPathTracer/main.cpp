@@ -9,13 +9,14 @@ void cornellbox();
 void car();
 void diningroom();
 
+void MathTest();
+
 #if DEBUG
 extern int count_tri_light_inter;
 #endif
 int main()
 {
 	cornellbox();
-
 #if DEBUG
 	printf("%d\n", count_tri_light_inter);
 #endif
@@ -27,9 +28,9 @@ void cornellbox()
 	// cornellbox
 	clock_t begin, end;
 	int width = 64, height = 64;
-	Vec3f position(0.f, 0.f, 2.5f);
-	Vec3f lookAt(0.f, 0.f, 0.f);
-	Vec3f up(0.f, 1.0f, 0.f);
+	Vec position(0.f, 0.f, 2.5f);
+	Vec lookAt(0.f, 0.f, 0.f);
+	Vec up(0.f, 1.0f, 0.f);
 	float fov = 60.0f;
 	std::string file_path = std::string("../image/") + "cornellbox.png";
 	TriMesh* triMesh = new TriMesh;
@@ -38,7 +39,7 @@ void cornellbox()
 	Scene scene;
 	scene.add(triMesh);
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 10);
+	Render render(width, height, Color(1, 0, 0), camera, 128);
 	scene.buildBVH();
 	begin = clock();
 	render.render(scene);
@@ -53,9 +54,9 @@ void car()
 	// car 
 	clock_t begin, end;
 	int width = 200, height = 100;
-	Vec3f position(8.22f, -0.61f, -9.80f);
-	Vec3f lookAt(7.514f, -0.702f, -9.097f);
-	Vec3f up(-0.065f, 0.996f, 0.065f);
+	Vec position(8.22f, -0.61f, -9.80f);
+	Vec lookAt(7.514f, -0.702f, -9.097f);
+	Vec up(-0.065f, 0.996f, 0.065f);
 	float fov = 45.0f;
 	std::string file_path = std::string("../image/") + "car.ppm";
 	TriMesh* triMesh = new TriMesh;
@@ -87,9 +88,9 @@ void diningroom()
 	// dining room
 	clock_t begin, end;
 	int width1 = 200, height1 = 100;
-	Vec3f position1(0.0f, 12.720f, 31.850f);
-	Vec3f lookAt1(0.0f, 12.546f, 30.865f);
-	Vec3f up1(0.0f, 0.985f, -0.174f);
+	Vec position1(0.0f, 12.720f, 31.850f);
+	Vec lookAt1(0.0f, 12.546f, 30.865f);
+	Vec up1(0.0f, 0.985f, -0.174f);
 	float fov1 = 45.0f;
 	std::string file_path1 = std::string("../image/") + "diningroom.ppm";
 	TriMesh* triMesh1 = new TriMesh;
@@ -114,4 +115,18 @@ void diningroom()
 	render1.writeImage(file_path1);
 
 	delete triMesh1;
+}
+
+void MathTest()
+{
+	Vec v1(1, 2, 3);
+	Vec v2(1, -1, 1);
+
+	Vec v3 = v1 - v2;
+	v3.print();
+
+	v3 = v1 + v2;
+	v3.print();
+
+	printf("%f\n", dot(v1, v2));
 }

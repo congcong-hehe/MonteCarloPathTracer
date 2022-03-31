@@ -3,8 +3,6 @@
 #include <random>
 #include <time.h>
 
-#define DEBUG true
-
 inline float getRandFloatNum(float left, float right)
 {
 	std::random_device dev;
@@ -29,7 +27,7 @@ inline void clamp(float &a, const float left, const float right)
 	a = a < right ? a : right;
 }
 
-inline void clampColor(Vec3f& color)
+inline void clampColor(Vec& color)
 {
 	clamp(color.x, 0.0f, 1.0f);
 	clamp(color.y, 0.0f, 1.0f);
