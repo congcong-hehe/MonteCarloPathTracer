@@ -2,6 +2,19 @@
 #include <algorithm>
 #include "utility.h"
 
+void deleteBvhNode(BvhNode* root)
+{
+	if (root == nullptr) return;
+	deleteBvhNode(root->left_);
+	deleteBvhNode(root->right_);
+	delete root;
+}
+
+BVH::~BVH()
+{
+	deleteBvhNode(root_);
+}
+
 inline bool aabbXCompare(const AABB& aabb1, const AABB& aabb2)
 {
 	return aabb1.v_min_.x < aabb2.v_min_.x;
@@ -17,7 +30,7 @@ inline bool aabbZCompare(const AABB& aabb1, const AABB& aabb2)
 	return aabb1.v_min_.z < aabb2.v_min_.z;
 }
 
-Bvh_Node::Bvh_Node(std::vector<AABB>& aabbs, int start, int end) // 左闭右开
+BvhNode::BvhNode(std::vector<AABB>& aabbs, int start, int end) // 左闭右开
 {
 	int span = end - start;
 	
@@ -27,7 +40,7 @@ Bvh_Node::Bvh_Node(std::vector<AABB>& aabbs, int start, int end) // 左闭右开
 	}
 	else 
 	{
-		int  rand_int = getRandIntNum(0, 2);
+		int rand_int = getRandIntNum(0, 2);
 		if (rand_int == 0)
 		{
 			std::sort(aabbs.begin() + start, aabbs.begin() + end, aabbXCompare);
@@ -42,8 +55,8 @@ Bvh_Node::Bvh_Node(std::vector<AABB>& aabbs, int start, int end) // 左闭右开
 		}
 
 		int mid = start + span / 2;
-		left_ = std::make_shared<Bvh_Node>(aabbs, start, mid);
-		right_ = std::make_shared<Bvh_Node>(aabbs, mid, end);
+		left_ = new BvhNode(aabbs, start, mid);
+		right_ = new BvhNode(aabbs, mid, end);
 
 		aabb_ = left_->aabb_.add(right_->aabb_);
 	}
@@ -54,7 +67,7 @@ void BVH::build(std::vector<TriMesh*>& triMeshs)
 	// 为每一个三角形构建包围盒
 	for (int i = 0; i < triMeshs.size(); ++i)
 	{
-		auto tris = triMeshs[i]->tris_;
+		auto &tris = triMeshs[i]->tris_;
 		for (int j = 0; j < tris.size(); ++j)
 		{
 			aabbs_.push_back(AABB(tris[j]));
@@ -62,7 +75,7 @@ void BVH::build(std::vector<TriMesh*>& triMeshs)
 	}
 
 	// 递归地构建BVH
-	root_ = std::make_shared<Bvh_Node>(aabbs_, 0, aabbs_.size());
+	root_ = new BvhNode(aabbs_, 0, aabbs_.size());
 }
 
 bool BVH::intersection(Ray& ray, Intersection &inter)
@@ -72,7 +85,7 @@ bool BVH::intersection(Ray& ray, Intersection &inter)
 }
 
 // 求光线和场景的交点
-bool BVH::getIntersectPoint(Ray& ray, float &t, Intersection& intersection, std::shared_ptr<Bvh_Node> bvh_node)
+bool BVH::getIntersectPoint(Ray& ray, float &t, Intersection& intersection, BvhNode* bvh_node)
 {
 	if (!bvh_node->aabb_.hit(ray))	// 如果光线没有打到包围盒
 	{
@@ -95,8 +108,10 @@ bool BVH::getIntersectPoint(Ray& ray, float &t, Intersection& intersection, std:
 	bool tag1 = getIntersectPoint(ray, t1, intersection1, bvh_node->left_);
 	bool tag2 = getIntersectPoint(ray, t2, intersection2, bvh_node->right_);
 
+	if (!(tag1 || tag2)) return false;
+
 	intersection = t1 < t2 ? intersection1 : intersection2;
 	t = std::min(t1, t2);
 
-	return tag1 || tag2;
+	return true;
 }

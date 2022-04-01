@@ -43,9 +43,13 @@ public:
 	{
 		if (dot(wi, norm) > 0)
 		{
-			/*return Kd * std::max(0.0f, dot(wi, norm)) + 
-				Ks * std::pow(std::max(dot(((wi + wo) / 2).normalization(), norm), 0.0f), Ns);*/
-			return Kd / PI;
+			/*if (isSpecular())
+			{
+				return Kd * std::max(0.0f, dot(wi, norm)) +
+					Ks * std::pow(std::max(dot(((wi + wo) / 2).normalization(), norm), 0.0f), Ns);
+			}
+			else*/ 
+				return Kd;
 		}
 		else
 		{

@@ -58,7 +58,8 @@ void Render::render(Scene& scene) const
 			for (int i = 0; i < spp_; ++i)
 			{
 				Ray ray = getRay(x + x_rand[i], y + y_rand[i]);
-				color += scene.castRay(ray);
+				//color += scene.castRay(ray);
+				color += scene.castRayBVH(ray);
 			}
 			framebuffer_.setColor(height_ - y - 1, x, color / spp_);
 		}

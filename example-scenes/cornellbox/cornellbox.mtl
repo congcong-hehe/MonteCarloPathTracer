@@ -1,12 +1,15 @@
 # vkEngine Export mtl file
+# 顶，底和后面
 newmtl cornellbox_0_material
 Kd 1 1 1
 Ks 0 0 0
 Ns 1
+# 绿色墙壁
 newmtl cornellbox_1_material
 Kd 0 1 0
 Ks 0 0 0
 Ns 1
+# 红色墙壁
 newmtl cornellbox_2_material
 Kd 1 0 0
 Ks 0 0 0
@@ -16,10 +19,12 @@ Kd 0.0 0.0 0.0
 Le 10 10 10
 Ks 0 0 0
 Ns 1
+# 立方体
 newmtl cornellbox_4_material
 Kd 1 1 1
 Ks 1 1 1
 Ns 33
+# 球
 newmtl cornellbox_5_material
 Kd 1 1 1
 Ks 0 0 0

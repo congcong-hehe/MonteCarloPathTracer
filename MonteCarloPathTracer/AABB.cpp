@@ -35,23 +35,23 @@ AABB AABB::add(AABB& aabb) const
 
 bool AABB::hit(Ray& ray) const
 {
-	float t_enter = FLT_MAX, t_exit = -FLT_MAX;
+	float t_enter = -FLT_MAX, t_exit = FLT_MAX;
 	float t_min, t_max;
 
 	t_min = std::min((v_min_.x - ray.origin.x) / ray.direction.x, (v_max_.x - ray.origin.x) / ray.direction.x);
 	t_max = std::max((v_min_.x - ray.origin.x) / ray.direction.x, (v_max_.x - ray.origin.x) / ray.direction.x);
-	t_enter = std::min(t_min, t_enter);
-	t_exit = std::max(t_max, t_exit);
+	t_enter = std::max(t_min, t_enter);
+	t_exit = std::min(t_max, t_exit);
 
 	t_min = std::min((v_min_.y - ray.origin.y) / ray.direction.y, (v_max_.y - ray.origin.y) / ray.direction.y);
 	t_max = std::max((v_min_.y - ray.origin.y) / ray.direction.y, (v_max_.y - ray.origin.y) / ray.direction.y);
-	t_enter = std::min(t_min, t_enter);
-	t_exit = std::max(t_max, t_exit);
+	t_enter = std::max(t_min, t_enter);
+	t_exit = std::min(t_max, t_exit);
 
 	t_min = std::min((v_min_.z - ray.origin.z) / ray.direction.z, (v_max_.z - ray.origin.z) / ray.direction.z);
 	t_max = std::max((v_min_.z - ray.origin.z) / ray.direction.z, (v_max_.z - ray.origin.z) / ray.direction.z);
-	t_enter = std::min(t_min, t_enter);
-	t_exit = std::max(t_max, t_exit);
+	t_enter = std::max(t_min, t_enter);
+	t_exit = std::min(t_max, t_exit);
 
 	return t_enter <= t_exit && t_exit >= 0;
 }

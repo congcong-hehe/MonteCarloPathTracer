@@ -25,6 +25,9 @@ void TriMesh::LoadObjFile(std::string file_path, std::string file_name)
 
 		is >> tag;
 
+		if (tag == "#")
+			continue;
+
 		if (tag == "v")
 		{
 			Vec pos;

@@ -1,5 +1,6 @@
 #include "Tri.h"
 #include "utility.h"
+#include <time.h>
 
 #if DEBUG
 int count_tri_light_inter = 0;	// 统计光线和三角形求交的次数
@@ -90,5 +91,6 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 	intersection.uv.v = tri.v0.uv.v * (1 - b1 - b2) + tri.v1.uv.v * b1 + tri.v2.uv.v * b2;
 
 	ray.t = t;
+
 	return true;
 }

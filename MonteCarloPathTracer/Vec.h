@@ -1,4 +1,9 @@
 #pragma once
+
+// 自己实现的向量库
+//尝试使用simd，但是simd没有加速效果，只是和原来的差不多
+//尝试替换为eigen，结果速度更慢
+
 #include <iostream>
 #include "global.h"
 #include <emmintrin.h>

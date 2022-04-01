@@ -7,4 +7,4 @@
 #define USE_SIMD false
 
 const float PI = 3.141592653589793f;
-const float epsilon = 0.00001f;
+const float epsilon = 0.0001f;

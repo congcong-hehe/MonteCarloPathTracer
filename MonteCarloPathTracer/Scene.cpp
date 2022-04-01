@@ -27,40 +27,6 @@ void Scene::buildBVH()
 	bvh_->build(triMeshs_);
 }
 
-// 投射一根光线，得到光线的redience
-Color Scene::castRayBVH(Ray& ray)
-{
-	Color pixel_radience = Color(0, 0, 0);
-
-	Intersection intersection;
-	if (bvh_->intersection(ray, intersection))	// 如果光线和三角网格有交点
-	{
-		if (intersection.material->image_texture != nullptr)
-		{
-			pixel_radience = intersection.material->getTextureColor(intersection.uv.u, intersection.uv.v);
-		}
-		else if (!intersection.material->isLight())	// 如果没有打到光源上
-		{
-			pixel_radience = trace(intersection, -ray.direction, 1);
-		}
-		else
-		{
-			pixel_radience = intersection.material->Le;
-		}
-	}
-	else
-	{
-		if (skybox_ != nullptr)
-		{
-			pixel_radience = skybox_->sample(ray);
-		}
-	}
-	
-	clampColor(pixel_radience);
-
-	return pixel_radience;
-}
-
 bool Scene::getIntersection(Ray& ray, Intersection& intersection)
 {
 	float t_min = FLT_MAX;
@@ -117,7 +83,39 @@ Color Scene::castRay(Ray& ray)
 	return pixel_radience;
 }
 
+// 投射一根光线，得到光线的redience
+Color Scene::castRayBVH(Ray& ray)
+{
+	Color pixel_radience = Color(0, 0, 0);
 
+	Intersection intersection;
+	if (bvh_->intersection(ray, intersection))	// 如果光线和三角网格有交点
+	{
+		if (intersection.material->image_texture != nullptr)
+		{
+			pixel_radience = intersection.material->getTextureColor(intersection.uv.u, intersection.uv.v);
+		}
+		else if (!intersection.material->isLight())	// 如果没有打到光源上
+		{
+			pixel_radience = trace(intersection, -ray.direction, 1);
+		}
+		else
+		{
+			pixel_radience = intersection.material->Le;
+		}
+	}
+	else
+	{
+		if (skybox_ != nullptr)
+		{
+			pixel_radience = skybox_->sample(ray);
+		}
+	}
+
+	clampColor(pixel_radience);
+
+	return pixel_radience;
+}
 
 Vec Scene::MonteCarloSample(Intersection& p, Vec &wo)
 {
@@ -145,6 +143,7 @@ Vec Scene::MonteCarloSample(Intersection& p, Vec &wo)
 	return B * local_wi.x + C * local_wi.y + normal * local_wi.z;
 }
 
+// p是着色点位置，x是光源位置
 bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
 {
 	Intersection q;
@@ -196,7 +195,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 			float theta = dot(p.normal,wi);
 			float thetap = dot(x.normal, -wi);
 
-			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) /** theta*/ * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
+			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) * theta * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
 		}
 	}
 
@@ -217,7 +216,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		{
 			if (!x.material->isLight())
 			{
-				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal)/** dot(wi, p.normal) *// pdf_hemi / p_RR;
+				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal) * dot(wi, p.normal) / pdf_hemi / p_RR;
 			}
 		}
 	}
@@ -225,12 +224,12 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	{
 		if (skybox_ != nullptr)
 		{
-			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p.material, p.normal);// / pdf_hemi;
+			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p.material, p.normal) / pdf_hemi;
 		}
 	}
 
 	//Color tex_color = p.material->getTextureColor(p.uv.u, p.uv.v) * p.material->brdf(wi, wo, p.material, p.normal);
 
-	return light_dir + light_indir;// +tex_color;
+	return light_indir + light_dir;
 }
  
