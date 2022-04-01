@@ -47,6 +47,7 @@
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Tri.cpp" />
     <ClCompile Include="TriMesh.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

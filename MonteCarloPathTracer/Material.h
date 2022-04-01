@@ -20,13 +20,10 @@ public:
 	Vec Le;
 	Image* image_texture = nullptr;
 
+	// 如果使用vector来存储，那么vector扩容的时候就会拷贝构造并析构原来的函数,不能析构
 	~Material()
 	{
-		if (nullptr != image_texture)
-		{
-			delete image_texture;
-			image_texture = nullptr;
-		}
+
 	}
 
 	bool isLight() const
@@ -43,12 +40,12 @@ public:
 	{
 		if (dot(wi, norm) > 0)
 		{
-			/*if (isSpecular())
+			if (isSpecular())
 			{
 				return Kd * std::max(0.0f, dot(wi, norm)) +
 					Ks * std::pow(std::max(dot(((wi + wo) / 2).normalization(), norm), 0.0f), Ns);
 			}
-			else*/ 
+			else
 				return Kd;
 		}
 		else

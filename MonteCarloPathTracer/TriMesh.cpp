@@ -110,7 +110,7 @@ void TriMesh::LoadMtlFile(std::string file_path, std::string file_name)
 			std::string mat_name;
 			is >> mat_name;
 			material_index = materials_.size();
-			materials_.push_back(Material());
+			materials_.emplace_back(Material());
 			material_map_[mat_name] = material_index;
 		}
 

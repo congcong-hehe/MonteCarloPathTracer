@@ -42,7 +42,7 @@ void Tri::sampleLight(Intersection &x, float &pdf)
 	pdf = 1.0f / area;
 }
 
-// 求光线和三角形的交点
+//求光线和三角形的交点
 bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 {
 #if DEBUG
@@ -55,13 +55,13 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 
 	float a = dot(s1, tri.edge1);
 
-	if (std::fabs(a) < epsilon)
+	if (std::fabs(a) < epsilon || a < 0)
 	{
 		return false;
 	}
 
 	float t = dot(s2, tri.edge2) / a;
-	if (t < 0)
+	if (t < epsilon)
 	{
 		return false;
 	}
@@ -78,7 +78,7 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 		return false;
 	}
 
-	Vec normal = (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
+	Vec normal = tri.v0.norm;// (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
 	if (dot(ray.direction, normal) > 0)
 	{
 		return false;

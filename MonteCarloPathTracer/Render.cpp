@@ -42,8 +42,8 @@ void Render::render(Scene& scene) const
 
 	for (int i = 0; i < spp_; ++i)
 	{
-		x_rand[i] = getRandFloatNum(0, 1);
-		y_rand[i] = getRandFloatNum(0, 1);
+		x_rand[i] = getRand();
+		y_rand[i] = getRand();
 	}
 
 #if !DEBUG
@@ -59,7 +59,7 @@ void Render::render(Scene& scene) const
 			{
 				Ray ray = getRay(x + x_rand[i], y + y_rand[i]);
 				//color += scene.castRay(ray);
-				color += scene.castRayBVH(ray);
+				color += scene.castRayBVH(ray);		// BVH对于connelbox大概25%的提升
 			}
 			framebuffer_.setColor(height_ - y - 1, x, color / spp_);
 		}

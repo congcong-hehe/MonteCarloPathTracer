@@ -22,3 +22,4 @@ public:
 
 bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection);
 
+

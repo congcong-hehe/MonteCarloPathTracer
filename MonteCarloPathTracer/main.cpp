@@ -39,7 +39,7 @@ void cornellbox()
 	Scene scene;
 	scene.add(triMesh);
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 10);
+	Render render(width, height, Color(1, 0, 0), camera, 100);
 	scene.buildBVH();
 	begin = clock();
 	render.render(scene);
@@ -53,12 +53,12 @@ void car()
 {
 	// car 
 	clock_t begin, end;
-	int width = 200, height = 100;
+	int width = 64, height = 32;
 	Vec position(8.22f, -0.61f, -9.80f);
 	Vec lookAt(7.514f, -0.702f, -9.097f);
 	Vec up(-0.065f, 0.996f, 0.065f);
 	float fov = 45.0f;
-	std::string file_path = std::string("../image/") + "car.ppm";
+	std::string file_path = std::string("../image/") + "car.png";
 	TriMesh* triMesh = new TriMesh;
 	triMesh->LoadMtlFile("../example-scenes/car/", "car.mtl");
 	triMesh->LoadObjFile("../example-scenes/car/", "car.obj");

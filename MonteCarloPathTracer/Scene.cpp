@@ -9,6 +9,19 @@ Scene::~Scene()
 		delete bvh_;
 		bvh_ = nullptr;
 	}
+
+	for (int i = 0; i < triMeshs_.size(); ++i)
+	{
+		auto &materials = triMeshs_[i]->materials_;
+		for (int j = 0; j < materials.size(); ++j)
+		{
+			if (materials[j].image_texture != nullptr)
+			{
+				delete materials[j].image_texture;
+				materials[j].image_texture = nullptr;
+			}
+		}
+	}
 }
 
 void Scene::add(TriMesh* triMesh)
@@ -117,10 +130,10 @@ Color Scene::castRayBVH(Ray& ray)
 	return pixel_radience;
 }
 
-Vec Scene::MonteCarloSample(Intersection& p, Vec &wo)
+Vec Scene::HemisphereSample(Intersection& p)
 {
 	// 在局部坐标系中半球上产生随机的方向
-	float u1 = getRandFloatNum(0, 1), u2 = getRandFloatNum(0, 1);
+	float u1 = getRand(), u2 = getRand();
 	float z = std::fabs(1 - 2.0f * u1);
 	float r = std::sqrt(std::max(0.0f, 1 - z * z));
 	float phi = 2 * PI * u2;
@@ -139,9 +152,17 @@ Vec Scene::MonteCarloSample(Intersection& p, Vec &wo)
 		float inv_len = 1.0f / std::sqrt(normal.y * normal.y + normal.z * normal.z);
 		C = Vec(0.0f, normal.z * inv_len, -normal.y * inv_len);
 	}
-
+	B = cross(C, p.normal);
 	return B * local_wi.x + C * local_wi.y + normal * local_wi.z;
 }
+
+// https://blog.csdn.net/weixin_44176696/article/details/113418991?spm=1001.2014.3001.5502#_571
+// 经过实验，方法2的效果更好，但是速度更慢，6s->7s
+Vec Scene::HemisphereSample2(Intersection& p)
+{
+	return (getRandomVec() + p.normal);
+}
+
 
 // p是着色点位置，x是光源位置
 bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
@@ -202,7 +223,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	// 从其他的反射物采样 
 	// 在半球面上随机产生一个方向
 	float pdf_hemi = 0.5f / PI;	// 在半球上的采样概率
-	Vec wi = MonteCarloSample(p, wo).normalization();
+	Vec wi = HemisphereSample(p).normalization();
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;

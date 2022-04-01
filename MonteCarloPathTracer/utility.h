@@ -2,24 +2,15 @@
 
 #include <random>
 #include <time.h>
+#include "Vec.h"
 
-inline float getRandFloatNum(float left, float right)
-{
-	std::random_device dev;
-	std::mt19937 rng(dev());
-	std::uniform_real_distribution<float> dis(left, right);	// ×ó±ÕÓÒ±Õ
+float getRandFloatNum(const float left, const float right);
 
-	return dis(rng);
-}
+int getRandIntNum(const int left, const int right);
 
-inline int getRandIntNum(int left, int right)
-{
-	std::random_device dev;
-	std::mt19937 rng(dev());
-	std::uniform_int_distribution<int> dis(left, right);	// ×ó±ÕÓÒ±Õ
+float getRand();
 
-	return dis(rng);
-}
+Vec getRandomVec();
 
 inline void clamp(float &a, const float left, const float right)
 {

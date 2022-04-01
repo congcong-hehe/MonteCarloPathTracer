@@ -1,7 +1,7 @@
 #pragma once
 
 // 自己实现的向量库
-//尝试使用simd，但是simd没有加速效果，只是和原来的差不多
+//尝试使用simd，大概有15%的提升
 //尝试替换为eigen，结果速度更慢
 
 #include <iostream>
@@ -95,6 +95,15 @@ struct Vec
 		return Vec(_mm_div_ps(sse_val, m));
 #else
 		return Vec(x / a, y / a, z / a); 
+#endif
+	}
+
+	Vec operator / (const Vec& v) const
+	{
+#if USE_SIMD
+		return Vec(_mm_div_ps(sse_val, v.sse_val));
+#else
+		return Vec(x / v.x, y / v.y, z / v.z);
 #endif
 	}
 
