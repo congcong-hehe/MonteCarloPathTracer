@@ -16,7 +16,7 @@ extern std::vector<size_t> count_tri_light_inter;
 #endif
 int main()
 {
-	cornellbox();
+	car();
 #if DEBUG
 	for (auto num : count_tri_light_inter)
 	{
@@ -56,7 +56,7 @@ void car()
 {
 	// car 
 	clock_t begin, end;
-	int width = 400, height = 200;
+	int width = 200, height = 100;
 	Vec position(8.22f, -0.61f, -9.80f);
 	Vec lookAt(7.514f, -0.702f, -9.097f);
 	Vec up(-0.065f, 0.996f, 0.065f);
@@ -106,7 +106,7 @@ void diningroom()
 	scene1.addSkyBox(&skyBox1);
 
 	Camera camera1(position1, lookAt1, up1, fov1);
-	Render render1(width1, height1, Color(1, 0, 0), camera1, 4);
+	Render render1(width1, height1, Color(1, 0, 0), camera1, 1);
 
 	scene1.buildBVH();
 
@@ -118,18 +118,4 @@ void diningroom()
 	render1.writeImage(file_path1);
 
 	delete triMesh1;
-}
-
-void MathTest()
-{
-	Vec v1(1, 2, 3);
-	Vec v2(1, -1, 1);
-
-	Vec v3 = v1 - v2;
-	v3.print();
-
-	v3 = v1 + v2;
-	v3.print();
-
-	printf("%f\n", dot(v1, v2));
 }

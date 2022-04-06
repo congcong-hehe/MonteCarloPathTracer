@@ -20,7 +20,7 @@ SkyBox::~SkyBox()
 Color SkyBox::sample(Ray& ray)
 {
     float theta = std::acos(ray.direction.y) / PI;
-    float phi = std::atan2(ray.direction.x, -ray.direction.z) / PI * 0.5f;
+    float phi = std::atan2(ray.direction.x, ray.direction.z) / PI * 0.5f;
 
     int width_index = phi * width_;
     int height_index = theta * height_;
