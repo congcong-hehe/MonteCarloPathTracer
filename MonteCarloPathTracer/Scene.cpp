@@ -99,6 +99,7 @@ Color Scene::castRay(Ray& ray)
 // 投射一根光线，得到光线的redience
 Color Scene::castRayBVH(Ray& ray)
 {
+	//return skybox_->sample(ray);
 	Color pixel_radience = Color(0, 0, 0);
 
 	Intersection intersection;
@@ -216,7 +217,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 			float theta = dot(p.normal,wi);
 			float thetap = dot(x.normal, -wi);
 
-			light_dir += x.material->Le * p.material->brdf(wi, wo, p.material, p.normal) * theta * thetap / std::pow((x.position - p.position).norm(), 2.0f) / pdf;
+			light_dir += x.material->Le * p.material->brdf(wi, wo, p) * theta * thetap / (x.position - p.position).normSquare() / pdf;
 		}
 	}
 
@@ -237,7 +238,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		{
 			if (!x.material->isLight())
 			{
-				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p.material, p.normal) * dot(wi, p.normal) / pdf_hemi / p_RR;
+				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / (x.position - p.position).normSquare()/ pdf_hemi / p_RR;
 			}
 		}
 	}
@@ -245,11 +246,9 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	{
 		if (skybox_ != nullptr)
 		{
-			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p.material, p.normal) / pdf_hemi;
+			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p) / pdf_hemi;
 		}
 	}
-
-	//Color tex_color = p.material->getTextureColor(p.uv.u, p.uv.v) * p.material->brdf(wi, wo, p.material, p.normal);
 
 	return light_indir + light_dir;
 }

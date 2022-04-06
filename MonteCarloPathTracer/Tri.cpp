@@ -3,7 +3,7 @@
 #include <time.h>
 
 #if DEBUG
-int count_tri_light_inter = 0;	// 统计光线和三角形求交的次数
+std::vector<size_t> count_tri_light_inter = { 0 };	// 统计光线和三角形求交的次数
 #endif
 
 void Tri::init(std::vector<Vec> &vs, std::vector<Vec> &vns, std::vector<UV> &vts, int *v, int *vn, int *vt)
@@ -29,7 +29,7 @@ void Tri::init(std::vector<Vec> &vs, std::vector<Vec> &vns, std::vector<UV> &vts
 // 采样光源，从光源上随机采一点，得到交点和采样概率，pdf = 1 / area
 void Tri::sampleLight(Intersection &x, float &pdf)
 {
-	float rand1 = std::sqrt(getRandFloatNum(0, 1)),  rand2 = getRandFloatNum(0, 1);
+	float rand1 = std::sqrt(getRand()),  rand2 = getRand();
 
 	float a0 = 1 - rand1;
 	float a1 = rand1 * (1 - rand2);
@@ -46,7 +46,9 @@ void Tri::sampleLight(Intersection &x, float &pdf)
 bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 {
 #if DEBUG
-	count_tri_light_inter++;
+	if (count_tri_light_inter.back() == ULLONG_MAX)
+		count_tri_light_inter.push_back(0);
+	count_tri_light_inter.back()++;
 #endif
 
 	Vec s = ray.origin - tri.v0.pos;
@@ -78,7 +80,7 @@ bool rayTriIntersect(Ray& ray, Tri& tri, Intersection& intersection)
 		return false;
 	}
 
-	Vec normal = tri.v0.norm;// (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
+	Vec normal = (tri.v0.norm * (1 - b1 - b2) + tri.v1.norm * b1 + tri.v2.norm * b2).normalization();
 	if (dot(ray.direction, normal) > 0)
 	{
 		return false;

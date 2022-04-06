@@ -97,7 +97,7 @@ void TriMesh::LoadMtlFile(std::string file_path, std::string file_name)
 	std::ifstream in(mtl_name);
 
 	std::string line;
-	int material_index = 0;	// 当前读入的材质的下标 
+	size_t material_index = 0;	// 当前读入的材质的下标 
 	while (std::getline(in, line))
 	{
 		std::string tag;

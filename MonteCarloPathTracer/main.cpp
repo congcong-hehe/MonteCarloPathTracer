@@ -12,13 +12,16 @@ void diningroom();
 void MathTest();
 
 #if DEBUG
-extern int count_tri_light_inter;
+extern std::vector<size_t> count_tri_light_inter;
 #endif
 int main()
 {
 	cornellbox();
 #if DEBUG
-	printf("%d\n", count_tri_light_inter);
+	for (auto num : count_tri_light_inter)
+	{
+		std::cout << num << std::endl;
+	}
 #endif
 	return 0;
 }
@@ -27,7 +30,7 @@ void cornellbox()
 {
 	// cornellbox
 	clock_t begin, end;
-	int width = 64, height = 64;
+	int width = 256, height = 256;
 	Vec position(0.f, 0.f, 2.5f);
 	Vec lookAt(0.f, 0.f, 0.f);
 	Vec up(0.f, 1.0f, 0.f);
@@ -39,7 +42,7 @@ void cornellbox()
 	Scene scene;
 	scene.add(triMesh);
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 100);
+	Render render(width, height, Color(1, 0, 0), camera, 16);
 	scene.buildBVH();
 	begin = clock();
 	render.render(scene);
@@ -53,7 +56,7 @@ void car()
 {
 	// car 
 	clock_t begin, end;
-	int width = 64, height = 32;
+	int width = 400, height = 200;
 	Vec position(8.22f, -0.61f, -9.80f);
 	Vec lookAt(7.514f, -0.702f, -9.097f);
 	Vec up(-0.065f, 0.996f, 0.065f);
@@ -69,7 +72,7 @@ void car()
 	scene.addSkyBox(&skyBox);
 
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 4);
+	Render render(width, height, Color(1, 0, 0), camera, 1);
 
 	scene.buildBVH();
 

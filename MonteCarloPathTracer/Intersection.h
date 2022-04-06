@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Vec.h"
-#include "Material.h"
+
+class Material;
 
 // 光线和三角面片的交点类
 struct Intersection

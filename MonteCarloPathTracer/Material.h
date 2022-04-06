@@ -2,6 +2,7 @@
 
 #include "Vec.h"
 #include "Image.h"
+#include "Intersection.h"
 #include <algorithm>
 
 /*
@@ -36,22 +37,26 @@ public:
 		return Ks.x > epsilon && Ks.y > epsilon && Ks.z > epsilon;
 	}
 
-	Vec brdf(Vec& wi, Vec& wo, Material* material, Vec& norm)
+	Vec brdf(Vec& wi, Vec& wo, Intersection &p)
 	{
-		if (dot(wi, norm) > 0)
+		float dot_wi_n = dot(wi, p.normal);
+
+		if (dot_wi_n < 0) return Vec();
+
+		Vec abedo;
+		if (isSpecular())
 		{
-			if (isSpecular())
-			{
-				return Kd * std::max(0.0f, dot(wi, norm)) +
-					Ks * std::pow(std::max(dot(((wi + wo) / 2).normalization(), norm), 0.0f), Ns);
-			}
-			else
-				return Kd;
+			abedo = Kd * dot_wi_n +
+				Ks * std::pow(std::max(dot(((wi + wo) / 2.f).normalization(), p.normal), 0.0f), Ns);
 		}
 		else
+			abedo = Kd;
+		if (p.material->image_texture != nullptr)
 		{
-			return Vec(0, 0, 0);
+			abedo *= (p.material->image_texture->getColor(p.uv.u, p.uv.v));
 		}
+
+		return abedo;
 	}
 
 	Color getTextureColor(float u, float v)

@@ -26,5 +26,5 @@ Color SkyBox::sample(Ray& ray)
     int height_index = theta * height_;
     int index = height_index * width_ + width_index;
 
-    return Color(image_[3 * index], image_[3 * index + 1], image_[3 * index + 2]);
+    return Color(image_[3 * index + 0], image_[3 * index + 1], image_[3 * index + 2]);
 }

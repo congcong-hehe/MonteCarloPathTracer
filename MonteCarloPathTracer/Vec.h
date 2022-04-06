@@ -148,7 +148,19 @@ struct Vec
 #endif
 	}
 
+	Vec& operator *= (const Vec& v)
+	{
+#if USE_SIMD
+		sse_val = _mm_mul_ps(sse_val, v.sse_val);
+		return *this;
+#else
+		x *= v.x; y *= v.y; z *= v.z; return *this;
+#endif
+	}
+
 	float norm() const { return (float)sqrt(x * x + y * y + z * z); }
+
+	float normSquare() const { return x * x + y * y + z * z; }
 
 	Vec& normalization() {  
 		if (x * x + y * y + z * z == 0.f) return *this;
