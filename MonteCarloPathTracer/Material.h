@@ -4,6 +4,7 @@
 #include "Image.h"
 #include "Intersection.h"
 #include <algorithm>
+#include "utility.h"
 
 /*
 Kd: r g b 散射光 diffuse color
@@ -46,11 +47,18 @@ public:
 		Vec abedo;
 		if (isSpecular())
 		{
-			abedo = Kd * dot_wi_n +
-				Ks * std::pow(std::max(dot(((wi + wo) / 2.f).normalization(), p.normal), 0.0f), Ns);
+			if (getRand() < 0.5)	// 反射漫反射光线
+			{
+				abedo = Kd / PI;
+			}
+			else // 发射高光光线
+			{
+				abedo = Ks * std::pow(std::max(dot(reflect(wi, p.normal), wo), 0.0f), Ns);
+			}
 		}
 		else
-			abedo = Kd;
+			abedo = Kd / PI;
+
 		if (p.material->image_texture != nullptr)
 		{
 			abedo *= (p.material->image_texture->getColor(p.uv.u, p.uv.v));

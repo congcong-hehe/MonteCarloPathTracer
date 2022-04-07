@@ -3,7 +3,7 @@
 #include "utility.h"
 
 Render::Render(int w, int h, Color back_color, Camera camera, int spp)
-	: width_(w), height_(h), spp_(spp)
+	: width_(w), height_(h), spp_(spp), back_color_(back_color)
 {
 	origin_ = camera.position;
 	Vec direction = (camera.lookAt - camera.position).normalization();
@@ -61,7 +61,7 @@ void Render::render(Scene& scene) const
 				//color += scene.castRay(ray);
 				color += scene.castRayBVH(ray);		// BVH对于connelbox大概25%的提升
 			}
-			framebuffer_.setColor(height_ - y - 1, x, color / spp_);
+			framebuffer_.setColor(height_ - y - 1, x, gammaCorrect(color / spp_));
 		}
 	}
 }

@@ -168,6 +168,9 @@ struct Vec
 	}
 
 	void print() const { printf("%f %f %f\n", x, y, z); }
+
+	float max() { return std::max(std::max(x, y), z); }
+	float min() { return std::min(std::min(x, y), z); }
 };
 
 inline float dot(const Vec& v1, const Vec& v2) { 

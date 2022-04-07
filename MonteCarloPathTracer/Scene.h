@@ -11,8 +11,8 @@ public:
 	std::vector<TriMesh*> triMeshs_;	// 场景中的三角形网格
 	BVH* bvh_ = nullptr;
 	SkyBox* skybox_ = nullptr;
-	int max_depth_ = 4;		// 路径追踪的最大深度
-	float p_RR = 0.8f;	// possibility of Russian Roulette	俄罗斯轮盘转
+	int max_depth_ = 5;		// 路径追踪的最大深度
+	float p_RR = 0.6f;	// possibility of Russian Roulette	俄罗斯轮盘转
 
 	~Scene();
 	void add(TriMesh* triMesh);

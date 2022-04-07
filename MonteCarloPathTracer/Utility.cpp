@@ -33,3 +33,13 @@ Vec getRandomVec()
 	} while (dot(d, d) > 1.0f);
 	return d.normalization();
 }
+
+Color gammaCorrect(const Color& color)
+{
+	Color new_color;
+	float gamma = 2.2f;
+	new_color.x = std::pow(color.x, 1.0f / gamma);
+	new_color.y = std::pow(color.y, 1.0f / gamma);
+	new_color.z = std::pow(color.z, 1.0f / gamma);
+	return new_color;
+}

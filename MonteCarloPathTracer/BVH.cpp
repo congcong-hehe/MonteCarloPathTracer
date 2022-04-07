@@ -15,17 +15,17 @@ BVH::~BVH()
 	deleteBvhNode(root_);
 }
 
-inline bool aabbXCompare(const AABB& aabb1, const AABB& aabb2)
+inline static bool aabbXCompare(const AABB& aabb1, const AABB& aabb2)
 {
 	return aabb1.v_min_.x < aabb2.v_min_.x;
 }
 
-inline bool aabbYCompare(const AABB& aabb1, const AABB& aabb2)
+inline static bool aabbYCompare(const AABB& aabb1, const AABB& aabb2)
 {
 	return aabb1.v_min_.y < aabb2.v_min_.y;
 }
 
-inline bool aabbZCompare(const AABB& aabb1, const AABB& aabb2)
+inline static bool aabbZCompare(const AABB& aabb1, const AABB& aabb2)
 {
 	return aabb1.v_min_.z < aabb2.v_min_.z;
 }

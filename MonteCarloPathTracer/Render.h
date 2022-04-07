@@ -23,5 +23,6 @@ public:
 private:
 	int spp_;
 	Image framebuffer_;
+	Color back_color_;
 };
 
