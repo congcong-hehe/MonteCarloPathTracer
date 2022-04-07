@@ -71,7 +71,7 @@ void car()
 	scene.addSkyBox(&skyBox);
 
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 16);
+	Render render(width, height, Color(1, 0, 0), camera, 8);
 
 	scene.buildBVH();
 

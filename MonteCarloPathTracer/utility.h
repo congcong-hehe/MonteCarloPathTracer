@@ -29,5 +29,5 @@ inline void clampColor(Vec& color)
 
 inline Vec reflect(const Vec& wi, const Vec& norm)
 {
-	return wi - norm * 2 * dot(norm, wi);
+	return norm * 2 * dot(norm, wi) - wi;
 }

@@ -125,23 +125,10 @@ Color Scene::castRayBVH(Ray& ray)
 	return pixel_radience;
 }
 
-// 对于漫反射和镜面反射使用不同的采样
-Vec Scene::HemisphereSample(Intersection& p)
+static Vec toWorld(const Vec& normal, const Vec& v)
 {
-	// 在局部坐标系中半球上产生随机的方向
-	float u1 = getRand(), u2 = getRand();
-	float z;
-	if(getRand() < p.material->Ks.max())
-		z = std::pow(u1, 1.0f / (1.0f + p.material->Ns));
-	else
-		z = std::fabs(1 - 2.0f * u1);
-	float r = std::sqrt(std::max(0.0f, 1 - z * z));
-	float phi = 2 * PI * u2;
-	Vec local_wi = Vec(r * std::cos(phi), r * std::sin(phi), z);
-
 	// 在世界坐标系下
 	Vec B, C;
-	Vec &normal = p.normal;
 	if (std::fabs(normal.x) > std::fabs(normal.y))
 	{
 		float inv_len = 1.0f / std::sqrt(normal.x * normal.x + normal.z * normal.z);
@@ -152,17 +139,52 @@ Vec Scene::HemisphereSample(Intersection& p)
 		float inv_len = 1.0f / std::sqrt(normal.y * normal.y + normal.z * normal.z);
 		C = Vec(0.0f, normal.z * inv_len, -normal.y * inv_len);
 	}
-	B = cross(C, p.normal);
-	return B * local_wi.x + C * local_wi.y + normal * local_wi.z;
+	B = cross(C, normal);
+	return B * v.x + C * v.y + normal * v.z;
+}
+
+// 漫反射采样，均匀分布
+static Vec HemisphereSample(Intersection& p)
+{
+	// 在局部坐标系中半球上产生随机的方向
+	float u1 = getRand(), u2 = getRand();
+	float z = u1;
+	float r = std::sqrt(std::max(0.0f, 1 - z * z));
+	float phi = 2 * PI * u2;
+	return toWorld(p.normal, Vec(r * std::cos(phi), r * std::sin(phi), z));
 }
 
 // https://blog.csdn.net/weixin_44176696/article/details/113418991?spm=1001.2014.3001.5502#_571
 // 经过实验，速度更慢，6s->7s
-Vec Scene::HemisphereSample2(Intersection& p)
+static Vec HemisphereSample2(Intersection& p)
 {
 	return (getRandomVec() + p.normal);
 }
 
+// https://zhuanlan.zhihu.com/p/78146875, 镜面反射采样
+static Vec BlinnSample(Intersection& p, Vec& wo)
+{
+	float u1 = getRand(), u2 = getRand();
+	float phi = 2 * PI * u2;
+	float z = std::pow(u1, 1.0f / (2.0f + p.material->Ns));
+	float r = std::sqrt(std::max(0.0f, 1 - z * z));
+	Vec H(r * std::cos(phi), r * std::sin(phi), z);
+
+	H = toWorld(p.normal, H);
+	return reflect(wo, H);
+}
+
+static Vec sample(Intersection& p, Vec& wo)
+{
+	if (p.material->isSpecular())
+	{
+		if (getRand() < p.material->Ks.max())
+		{
+			return BlinnSample(p, wo);
+		}
+	}
+	return HemisphereSample(p);
+}
 
 // p是着色点位置，x是光源位置
 bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
@@ -229,7 +251,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	// 从其他的反射物采样 
 	// 在半球面上随机产生一个方向
 	float pdf_hemi = 0.5f / PI;	// 在半球上的采样概率
-	Vec wi = HemisphereSample(p).normalization();
+	Vec wi = sample(p, wo).normalization();
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;
