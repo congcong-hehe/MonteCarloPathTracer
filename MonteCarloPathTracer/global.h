@@ -3,7 +3,7 @@
 #include <math.h>
 #include <memory>
 
-#define DEBUG false
+#define DEBUG true
 #define USE_SIMD true
 
 const float PI = 3.141592653589793f;

@@ -3,6 +3,7 @@ A CPU pathtracer only for triangle mesh.
 
 ## Dependencies
 * stb_image
+* rgbe
 
 ## Feature
 * vec math
@@ -11,11 +12,16 @@ A CPU pathtracer only for triangle mesh.
 * BVH
 * SSE accelerate
 * OpenMP
+* hdr environment map sample
+* importance sample(blinn-sample)
+* texture
+
+
+
 
 ## Todo
-* Lighting Maps : diffuse map, Specular map
-* cubemap
-* alpha blending
+* hdr important sample
+* refaction
 
 
 

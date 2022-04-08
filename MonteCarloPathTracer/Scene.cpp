@@ -62,45 +62,19 @@ bool Scene::getIntersection(Ray& ray, Intersection& intersection)
 	return t_min != FLT_MAX;
 }
 
-// 不使用包围盒加速
+// 投射一根光线，得到光线的redience
 Color Scene::castRay(Ray& ray)
 {
 	Color pixel_radience = Color(0, 0, 0);
 
 	Intersection intersection;
-
-	if (getIntersection(ray, intersection))	// 如果光线和三角网格有交点
-	{
-		if(!intersection.material->isLight())	// 如果没有打到光源上
-		{
-			pixel_radience = trace(intersection, -ray.direction, 1);
-		}
-		else
-		{
-			pixel_radience = intersection.material->Le;
-		}
-	}
+	bool tag = true;
+	if (bvh_ != nullptr)
+		tag = bvh_->intersection(ray, intersection);
 	else
-	{
-		if (skybox_ != nullptr)
-		{
-			pixel_radience = skybox_->sample(ray);
-			pixel_radience = pixel_radience / (pixel_radience + Color(1.0f, 1.0f, 1.0f));	// HDR->LDR
-		}
-	}
-
-	clampColor(pixel_radience);
-
-	return pixel_radience;
-}
-
-// 投射一根光线，得到光线的redience
-Color Scene::castRayBVH(Ray& ray)
-{
-	Color pixel_radience = Color(0, 0, 0);
-
-	Intersection intersection;
-	if (bvh_->intersection(ray, intersection))	// 如果光线和三角网格有交点
+		tag = getIntersection(ray, intersection);
+		
+	if (tag)	// 如果光线和三角网格有交点
 	{
 		if (!intersection.material->isLight())	// 如果没有打到光源上
 		{
@@ -144,46 +118,53 @@ static Vec toWorld(const Vec& normal, const Vec& v)
 }
 
 // 漫反射采样，均匀分布
-static Vec HemisphereSample(Intersection& p)
+static Vec HemisphereSample(Intersection& p, float &pdf)
 {
 	// 在局部坐标系中半球上产生随机的方向
 	float u1 = getRand(), u2 = getRand();
 	float z = u1;
 	float r = std::sqrt(std::max(0.0f, 1 - z * z));
 	float phi = 2 * PI * u2;
+	pdf = 0.5f / PI;
 	return toWorld(p.normal, Vec(r * std::cos(phi), r * std::sin(phi), z));
 }
 
 // https://blog.csdn.net/weixin_44176696/article/details/113418991?spm=1001.2014.3001.5502#_571
 // 经过实验，速度更慢，6s->7s
-static Vec HemisphereSample2(Intersection& p)
+static Vec HemisphereSample2(Intersection& p, float &pdf)
 {
+	pdf = 0.5f / PI;
 	return (getRandomVec() + p.normal);
 }
 
+// https://www.cnblogs.com/warpengine/p/3555028.html
 // https://zhuanlan.zhihu.com/p/78146875, 镜面反射采样
-static Vec BlinnSample(Intersection& p, Vec& wo)
+static Vec BlinnSample(Intersection& p, Vec& wo, float &pdf)
 {
+	float Ns = p.material->Ns;
 	float u1 = getRand(), u2 = getRand();
 	float phi = 2 * PI * u2;
-	float z = std::pow(u1, 1.0f / (2.0f + p.material->Ns));
+	float z = std::pow(u1, 1.0f / (1.0f + Ns));
 	float r = std::sqrt(std::max(0.0f, 1 - z * z));
 	Vec H(r * std::cos(phi), r * std::sin(phi), z);
 
 	H = toWorld(p.normal, H);
+
+	pdf = (Ns + 1) / (8 * PI) * std::pow(dot(H, p.normal), Ns) / dot(H, wo);
+
 	return reflect(wo, H);
 }
 
-static Vec sample(Intersection& p, Vec& wo)
+static Vec sample(Intersection& p, Vec& wo, float &pdf)
 {
 	if (p.material->isSpecular())
 	{
 		if (getRand() < p.material->Ks.max())
 		{
-			return BlinnSample(p, wo);
+			return BlinnSample(p, wo, pdf);
 		}
 	}
-	return HemisphereSample(p);
+	return HemisphereSample(p, pdf);
 }
 
 // p是着色点位置，x是光源位置
@@ -245,20 +226,18 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	// 对天空盒进行采样
 	if (skybox_ != nullptr)
 	{
-
+		Vec dir;
+		int x = 0, y = 0;
+		light_dir += skybox_->hdrSample(dir, x, y);
 	}
 
 	// 从其他的反射物采样 
 	// 在半球面上随机产生一个方向
-	float pdf_hemi = 0.5f / PI;	// 在半球上的采样概率
-	Vec wi = sample(p, wo).normalization();
+	float pdf = 0.0f;
+	Vec wi = sample(p, wo, pdf).normalization();
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;
-	if (getRandFloatNum(0, 1) > p_RR)	// 俄罗斯轮盘转测试
-	{
-		light_indir = Color(0, 0, 0);
-	}
 
 	if (getIntersection(newRay, x))		// 如果光线打到场景中的非光源点x
 	{
@@ -270,17 +249,17 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		{
 			if (!x.material->isLight())
 			{
-				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / (x.position - p.position).normSquare()/ pdf_hemi / p_RR;
+				light_indir = trace(x, -wi, depth + 1) * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / (x.position - p.position).normSquare()/ pdf / p_RR;
 			}
 		}
 	}
-	else
+	/*else
 	{
 		if (skybox_ != nullptr)
 		{
-			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p) / pdf_hemi * dot(wi, p.normal);
+			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p) / pdf * dot(wi, p.normal);
 		}
-	}
+	}*/
 
 	return light_indir + light_dir;
 }

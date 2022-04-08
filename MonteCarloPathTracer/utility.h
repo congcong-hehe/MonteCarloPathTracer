@@ -4,6 +4,8 @@
 #include <time.h>
 #include "Vec.h"
 
+#define DEBUGPRINT printf("%s %d\n", __FILE__, __LINE__);
+
 float getRandFloatNum(const float left, const float right);
 
 int getRandIntNum(const int left, const int right);

@@ -18,7 +18,6 @@ public:
 	void add(TriMesh* triMesh);
 	void addSkyBox(SkyBox* skybox);
 	void buildBVH();
-	Color castRayBVH(Ray& ray);		// 投射一根光线，返回光线的radience
 	Color castRay(Ray& ray);
 	Color trace(Intersection& p, Vec wo, int depth);	// 追踪光线
 

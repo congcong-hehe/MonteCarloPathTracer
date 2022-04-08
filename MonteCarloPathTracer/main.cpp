@@ -9,13 +9,15 @@ void cornellbox();
 void car();
 void diningroom();
 
+void hdr();
+
 
 #if DEBUG
 extern std::vector<size_t> count_tri_light_inter;
 #endif
 int main()
 {
-	car();
+	cornellbox();
 #if DEBUG
 	for (auto num : count_tri_light_inter)
 	{
@@ -71,7 +73,7 @@ void car()
 	scene.addSkyBox(&skyBox);
 
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 8);
+	Render render(width, height, Color(1, 0, 0), camera, 1);
 
 	scene.buildBVH();
 
@@ -117,4 +119,39 @@ void diningroom()
 	render1.writeImage(file_path1);
 
 	delete triMesh1;
+}
+
+void hdr()
+{
+	const char* skybox_name1 = "../example-scenes/car/environment_day.hdr";
+	SkyBox skyBox(skybox_name1);
+
+	Image hdr;
+	hdr.setWidth(skyBox.width_);
+	hdr.setHeight(skyBox.height_);
+	hdr.init();
+
+	for(int i = 0; i < hdr.getHeight(); ++i)
+		for (int j = 0; j < hdr.getWidth(); ++j)
+		{
+			hdr.setColor(i, j, gammaCorrect(skyBox.getColor(i, j) / (skyBox.getColor(i, j) + Color(1.0f, 1.0f, 1.0f))));
+		}
+	hdr.write("../image/hdr.png");	
+	
+
+	Image sample;
+	sample.setWidth(skyBox.width_);
+	sample.setHeight(skyBox.height_);
+	sample.init();
+
+	for (int i = 0; i < sample.getHeight(); ++i)
+		for (int j = 0; j < sample.getWidth(); ++j)
+		{
+			int x, y;
+			Vec dir;
+			skyBox.hdrSample(dir, y, x);
+			sample.setColor(x, y, Color(1.0f, 1.0f, 1.0f));
+		}
+	sample.write("../image/sample.png");
+
 }

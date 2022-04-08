@@ -60,6 +60,15 @@ struct Vec
 #endif
 	}
 
+	Vec(float _a)
+	{
+#if USE_SIMD
+		sse_val = _mm_set_ps(0.0, _a, _a, _a);
+#else
+		x = _a;	y = _a; z = _a;
+#endif
+	}
+
 	Vec operator - ()	const 
 	{ 
 #if USE_SIMD

@@ -47,13 +47,13 @@ public:
 		Vec abedo;
 		if (isSpecular())
 		{
-			if (getRand() < 0.5)	// 反射漫反射光线
+			if (getRand() > Ks.max())	// 反射漫反射光线
 			{
 				abedo = Kd / PI;
 			}
 			else // 发射高光光线
 			{
-				abedo = Ks * std::pow(std::max(dot(reflect(wi, p.normal), wo), 0.0f), Ns);
+				abedo = Ks * std::pow(std::max(dot(p.normal, (wo + wi).normalization()), 0.0f), Ns) * (Ns + 2) / PI * 0.5f;
 			}
 		}
 		else

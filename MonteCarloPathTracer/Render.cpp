@@ -58,8 +58,7 @@ void Render::render(Scene& scene) const
 			for (int i = 0; i < spp_; ++i)
 			{
 				Ray ray = getRay(x + x_rand[i], y + y_rand[i]);
-				//color += scene.castRay(ray);
-				color += scene.castRayBVH(ray);		// BVH对于connelbox大概25%的提升
+				color += scene.castRay(ray);		// BVH对于connelbox大概25%的提升
 			}
 			framebuffer_.setColor(height_ - y - 1, x, gammaCorrect(color / spp_));
 		}
