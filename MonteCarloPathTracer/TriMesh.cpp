@@ -124,9 +124,9 @@ void TriMesh::LoadMtlFile(std::string file_path, std::string file_name)
 			is >> materials_[material_index].Ks.x >> materials_[material_index].Ks.y >> materials_[material_index].Ks.z;
 		}
 
-		else if (tag == "Le")
+		else if (tag == "Ke")
 		{
-			is >> materials_[material_index].Le.x >> materials_[material_index].Le.y >> materials_[material_index].Le.z;
+			is >> materials_[material_index].Ke.x >> materials_[material_index].Ke.y >> materials_[material_index].Ke.z;
 		}
 
 		else if (tag == "Ns")

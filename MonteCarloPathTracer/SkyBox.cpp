@@ -20,6 +20,8 @@ SkyBox::SkyBox(const char* file_name)
 
     if (image_ == nullptr) return;
 
+    resolution = std::max(width_, height_);
+
     // 计算纹理的亮度分布
     float sum_lum = 0.f;
     vector<vector<float>> pdf(height_);
@@ -121,29 +123,41 @@ Color SkyBox::getColor(const int u, const int v)
 
 Color SkyBox::sample(Ray& ray)
 {
-    float phi = std::atan2(ray.direction.x, -ray.direction.z) / PI * 0.5f;
-    float theta = std::acos(ray.direction.y) / PI;
+    float phi = 0.5f - std::atan2(-ray.direction.z, -ray.direction.x) / PI * 0.5f;
+    float theta = 0.5f - std::asin(ray.direction.y) / PI;
 
     int width_index = phi * width_;
     int height_index = theta * height_;
     int index = height_index * width_ + width_index;
 
-    return getColor(width_index, height_index);
+    return getColor(height_index, width_index);
 }
 
-Color SkyBox::hdrSample(Vec& dir, int& x, int& y)
+float SkyBox::hdrpdf(Vec& dir, Color& color)
 {
-    float x1 = getRandIntNum(0, height_ - 1);
+    float phi = 0.5f - std::atan2(-dir.z, -dir.x) / PI * 0.5f;
+    float theta = 0.5f - std::asin(dir.y) / PI;
+
+    int width_index = phi * width_;
+    int height_index = theta * height_;
+
+    color = getColor(height_index, width_index);
+    return sample_p[height_index][width_index] * float(resolution * resolution / 2) / (2.0f * PI * PI * sin(theta));;
+}
+
+Color SkyBox::hdrSample(Vec& dir, int& x, int& y, float &pdf)
+{
+    float x1 = getRandIntNum(0, height_ - 1);   // 注意-1
     float x2 = getRandIntNum(0, width_ - 1);
     x = sample_x[x1][x2];
     y = sample_y[x1][x2];
-    int index = y * width_ + x;
 
     // 计算方向
-    float theta = (float)y / height_ * PI, phi = (float)x / width_ * 2 * PI;
-    dir.y = cos(theta);
-    dir.x = sin(theta) * sin(phi);
-    dir.z = - sin(theta) * cos(phi);
+    float theta = (0.5f - (float)y / height_) * PI, phi = (0.5f - (float)x / width_) * 2 * PI;
+    dir.y = sin(theta);
+    dir.x = -cos(theta) * cos(phi);
+    dir.z = -cos(theta) * sin(phi);
+    pdf = sample_p[y][x] * float(resolution * resolution / 2) / (2.0f * PI * PI * sin(theta));
 
-    return Color(image_[3 * index + 0], image_[3 * index + 1], image_[3 * index + 2]);
+    return getColor(y, x);
 }

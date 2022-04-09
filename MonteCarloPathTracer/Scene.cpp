@@ -82,7 +82,7 @@ Color Scene::castRay(Ray& ray)
 		}
 		else
 		{
-			pixel_radience = intersection.material->Le;
+			pixel_radience = intersection.material->Ke;
 		}
 	}
 	else
@@ -188,6 +188,11 @@ bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
 	return false;
 }
 
+static float misMixWeight(float a, float b) {
+	float t = a * a;
+	return t / (b * b + t);
+}
+
 Color Scene::trace(Intersection& p, Vec wo, int depth)
 {
 	// 如果超过最大的追踪深度
@@ -219,16 +224,23 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 			float theta = std::max(dot(p.normal,wi), 0.0f);
 			float thetap = std::max(dot(x.normal, -wi), 0.0f);
 
-			light_dir += x.material->Le * p.material->brdf(wi, wo, p) * theta * thetap / (x.position - p.position).normSquare() / pdf;
+			light_dir += x.material->Ke * p.material->brdf(wi, wo, p) * theta * thetap / (x.position - p.position).normSquare() / pdf;
 		}
 	}
 
-	// 对天空盒进行采样
 	if (skybox_ != nullptr)
 	{
 		Vec dir;
 		int x = 0, y = 0;
-		light_dir += skybox_->hdrSample(dir, x, y);
+		float sky_pdf;
+		Color color = skybox_->hdrSample(dir, x, y, sky_pdf);	// 重要性采样
+		Ray ray(p.position, dir);
+		Intersection inter;
+		float brdf_pdf;
+		Vec wi = sample(p, wo, brdf_pdf).normalization();
+		if (!getIntersection(ray, inter))
+			// 多重重要性采样
+			light_dir += color * p.material->brdf(dir, wo, p) * dot(dir, p.normal) / misMixWeight(sky_pdf, brdf_pdf);
 	}
 
 	// 从其他的反射物采样 
@@ -253,13 +265,16 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 			}
 		}
 	}
-	/*else
+	else
 	{
 		if (skybox_ != nullptr)
 		{
-			light_indir = skybox_->sample(newRay) * p.material->brdf(wi, wo, p) / pdf * dot(wi, p.normal);
+			Color color;
+			float sky_pdf = skybox_->hdrpdf(wi, color);
+			// 多重重要性采样
+			light_indir += color * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / misMixWeight(pdf, sky_pdf);
 		}
-	}*/
+	}
 
 	return light_indir + light_dir;
 }

@@ -19,7 +19,7 @@ public:
 	Vec Kd;
 	Vec Ks;
 	int Ns = 0;
-	Vec Le;
+	Vec Ke;
 	Image* image_texture = nullptr;
 
 	// 如果使用vector来存储，那么vector扩容的时候就会拷贝构造并析构原来的函数,不能析构
@@ -30,7 +30,7 @@ public:
 
 	bool isLight() const
 	{
-		return Le.x > epsilon && Le.y > epsilon && Le.z > epsilon;
+		return Ke.x > epsilon && Ke.y > epsilon && Ke.z > epsilon;
 	}
 
 	bool isSpecular() const
