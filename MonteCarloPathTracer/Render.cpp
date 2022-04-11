@@ -47,7 +47,7 @@ void Render::render(Scene& scene) const
 	}
 
 #if !DEBUG
-	#pragma omp parallel for num_threads(4)
+	#pragma omp parallel for num_threads(6)
 #endif
 	for (int x = 0; x < width_; ++x)
 	{

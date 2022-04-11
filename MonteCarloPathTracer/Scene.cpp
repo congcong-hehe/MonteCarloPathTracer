@@ -239,8 +239,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		float brdf_pdf;
 		Vec wi = sample(p, wo, brdf_pdf).normalization();
 		if (!getIntersection(ray, inter))
-			// 多重重要性采样
-			light_dir += color * p.material->brdf(dir, wo, p) * dot(dir, p.normal) / misMixWeight(sky_pdf, brdf_pdf);
+			light_dir += color * p.material->brdf(dir, wo, p) * dot(dir, p.normal) / sky_pdf;
 	}
 
 	// 从其他的反射物采样 
@@ -269,10 +268,9 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 	{
 		if (skybox_ != nullptr)
 		{
-			Color color;
-			float sky_pdf = skybox_->hdrpdf(wi, color);
+			Color color = skybox_->sample(newRay);
 			// 多重重要性采样
-			light_indir += color * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / misMixWeight(pdf, sky_pdf);
+			light_indir += color * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / pdf;
 		}
 	}
 

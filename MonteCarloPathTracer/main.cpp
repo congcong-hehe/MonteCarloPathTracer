@@ -7,7 +7,6 @@
 
 void cornellbox();
 void car();
-void vis();
 
 void hdr();
 
@@ -17,7 +16,7 @@ extern std::vector<size_t> count_tri_light_inter;
 #endif
 int main()
 {
-	cornellbox();
+	car();
 #if DEBUG
 	for (auto num : count_tri_light_inter)
 	{
@@ -53,32 +52,6 @@ void cornellbox()
 	delete triMesh;
 }
 
-void vis()
-{
-	// vis
-	clock_t begin, end;
-	int width = 256, height = 256;
-	Vec position(2.f, 11.464f, 23.8682f);
-	Vec lookAt(2.f, 9.464f, 18.8682f);
-	Vec up(0.f, 1.0f, 0.f);
-	float fov = 50.0f;
-	std::string file_path = std::string("../image/") + "vis.png";
-	TriMesh* triMesh = new TriMesh;
-	triMesh->LoadMtlFile("../example-scenes/vis/", "vis.mtl");
-	triMesh->LoadObjFile("../example-scenes/vis/", "vis.obj");
-	Scene scene;
-	scene.add(triMesh);
-	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 1);
-	scene.buildBVH();
-	begin = clock();
-	render.render(scene);
-	end = clock();
-	std::cout << "Render cost time : " << end - begin << "ms" << std::endl;
-	render.writeImage(file_path);
-	delete triMesh;
-}
-
 void car()
 {
 	// car 
@@ -99,7 +72,7 @@ void car()
 	scene.addSkyBox(&skyBox);
 
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 1);
+	Render render(width, height, Color(1, 0, 0), camera, 128);
 
 	scene.buildBVH();
 

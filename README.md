@@ -15,13 +15,16 @@ A CPU pathtracer only for triangle mesh.
 * hdr environment map sample
 * importance sample(blinn-sample)
 * texture
-
-
-
-
-## Todo
 * hdr important sample
-* refaction
+
+## result
+1. cornellbox
+
+![img](image/cornellbox_256spp.png)
+
+2. car
+
+![img](image/car_128spp.png)
 
 
 
