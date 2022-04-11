@@ -37,15 +37,6 @@ Ray Render::getRay(float x, float y) const
 // 渲染场景
 void Render::render(Scene& scene) const
 {
-	std::vector<float> x_rand(spp_);
-	std::vector<float> y_rand(spp_);
-
-	for (int i = 0; i < spp_; ++i)
-	{
-		x_rand[i] = getRand();
-		y_rand[i] = getRand();
-	}
-
 #if !DEBUG
 	#pragma omp parallel for num_threads(6)
 #endif
@@ -57,7 +48,7 @@ void Render::render(Scene& scene) const
 			Color color;
 			for (int i = 0; i < spp_; ++i)
 			{
-				Ray ray = getRay(x + x_rand[i], y + y_rand[i]);
+				Ray ray = getRay(x + getRand(), y + getRand());
 				color += scene.castRay(ray);		// BVH对于connelbox大概25%的提升
 			}
 			framebuffer_.setColor(height_ - y - 1, x, gammaCorrect(color / spp_));
