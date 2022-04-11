@@ -26,5 +26,10 @@ A CPU pathtracer only for triangle mesh.
 
 ![img](image/car_128spp.png)
 
+## reference
+* games101
+* https://blog.csdn.net/weixin_44176696/article/details/119988866
+
+
 
 
