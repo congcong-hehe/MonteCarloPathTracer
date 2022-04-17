@@ -118,28 +118,26 @@ static Vec toWorld(const Vec& normal, const Vec& v)
 }
 
 // 漫反射采样，均匀分布
-static Vec HemisphereSample(Intersection& p, float &pdf)
+static Vec HemisphereSample(Intersection& p)
 {
 	// 在局部坐标系中半球上产生随机的方向
 	float u1 = getRand(), u2 = getRand();
 	float z = u1;
 	float r = std::sqrt(std::max(0.0f, 1 - z * z));
 	float phi = 2 * PI * u2;
-	pdf = 0.5f / PI;
 	return toWorld(p.normal, Vec(r * std::cos(phi), r * std::sin(phi), z));
 }
 
 // https://blog.csdn.net/weixin_44176696/article/details/113418991?spm=1001.2014.3001.5502#_571
 // 经过实验，速度更慢，6s->7s
-static Vec HemisphereSample2(Intersection& p, float &pdf)
+static Vec HemisphereSample2(Intersection& p)
 {
-	pdf = 0.5f / PI;
 	return (getRandomVec() + p.normal);
 }
 
 // https://www.cnblogs.com/warpengine/p/3555028.html
 // https://zhuanlan.zhihu.com/p/78146875, 镜面反射采样
-static Vec BlinnSample(Intersection& p, Vec& wo, float &pdf)
+static Vec BlinnSample(Intersection& p, Vec& wo)
 {
 	float Ns = p.material->Ns;
 	float u1 = getRand(), u2 = getRand();
@@ -150,21 +148,30 @@ static Vec BlinnSample(Intersection& p, Vec& wo, float &pdf)
 
 	H = toWorld(p.normal, H);
 
-	pdf = (Ns + 1) / (8 * PI) * std::pow(dot(H, p.normal), Ns) / dot(H, wo);
+	/*pdf = (Ns + 1) / (8 * PI) * std::pow(dot(H, p.normal), Ns) / dot(H, wo);*/
 
 	return reflect(wo, H);
 }
 
-static Vec sample(Intersection& p, Vec& wo, float &pdf)
+static Vec sample(Intersection& p, Vec& wo)
 {
-	if (p.material->isSpecular())
+	if (getRand() < p.material->Ks.max())
 	{
-		if (getRand() < p.material->Ks.max())
-		{
-			return BlinnSample(p, wo, pdf);
-		}
+		return BlinnSample(p, wo);
 	}
-	return HemisphereSample(p, pdf);
+	return HemisphereSample(p);
+}
+
+static float samplePdf(Intersection& p, Vec& wi, Vec &wo)
+{
+	if (p.material->Ks.max() < epsilon)
+		return 0.5f / PI;
+	Vec H = (wi + wo).normalization();
+	float Ns = p.material->Ns;
+	float ks_pdf = (Ns + 1) / (8 * PI) * std::pow(dot(H, p.normal), Ns) / dot(H, wo);
+	float kd_pdf = 0.5f / PI;
+	float ks_w = (p.material->Ks.max()) / (p.material->Ks.max() + p.material->Kd.max());
+	return ks_pdf * ks_w + kd_pdf * (1 - ks_w);
 }
 
 // p是着色点位置，x是光源位置
@@ -186,11 +193,6 @@ bool Scene::isLightBlock(Intersection& p, Intersection& x, Vec &wi)
 	}
 
 	return false;
-}
-
-static float misMixWeight(float a, float b) {
-	float t = a * a;
-	return t / (b * b + t);
 }
 
 Color Scene::trace(Intersection& p, Vec wo, int depth)
@@ -237,15 +239,14 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		Ray ray(p.position, dir);
 		Intersection inter;
 		float brdf_pdf;
-		Vec wi = sample(p, wo, brdf_pdf).normalization();
 		if (!getIntersection(ray, inter))
 			light_dir += color * p.material->brdf(dir, wo, p) * dot(dir, p.normal) / sky_pdf;
 	}
 
 	// 从其他的反射物采样 
-	// 在半球面上随机产生一个方向
-	float pdf = 0.0f;
-	Vec wi = sample(p, wo, pdf).normalization();
+	// 在半球面上产生一个方向作为入射光线的反方向
+	Vec wi = sample(p, wo).normalization();
+	float pdf = samplePdf(p, wi, wo);
 
 	Ray newRay(p.position, wi, 1.0f);
 	Intersection x;
@@ -269,8 +270,7 @@ Color Scene::trace(Intersection& p, Vec wo, int depth)
 		if (skybox_ != nullptr)
 		{
 			Color color = skybox_->sample(newRay);
-			// 多重重要性采样
-			light_indir += color * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / pdf;
+			light_indir = color * p.material->brdf(wi, wo, p) * dot(wi, p.normal) / pdf;
 		}
 	}
 

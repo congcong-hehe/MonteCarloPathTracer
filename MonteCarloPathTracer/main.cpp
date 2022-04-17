@@ -16,7 +16,7 @@ extern std::vector<size_t> count_tri_light_inter;
 #endif
 int main()
 {
-	car();
+	cornellbox();
 #if DEBUG
 	for (auto num : count_tri_light_inter)
 	{
@@ -42,7 +42,7 @@ void cornellbox()
 	Scene scene;
 	scene.add(triMesh);
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 4);
+	Render render(width, height, Color(1, 0, 0), camera, 8);
 	scene.buildBVH();
 	begin = clock();
 	render.render(scene);
@@ -72,7 +72,7 @@ void car()
 	scene.addSkyBox(&skyBox);
 
 	Camera camera(position, lookAt, up, fov);
-	Render render(width, height, Color(1, 0, 0), camera, 8);
+	Render render(width, height, Color(1, 0, 0), camera, 16);
 
 	scene.buildBVH();
 

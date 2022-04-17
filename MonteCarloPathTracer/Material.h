@@ -44,27 +44,14 @@ public:
 
 		if (dot_wi_n < 0) return Vec();
 
-		Vec abedo;
-		if (isSpecular())
-		{
-			if (getRand() > Ks.max())	// 反射漫反射光线
-			{
-				abedo = Kd / PI;
-			}
-			else // 发射高光光线
-			{
-				abedo = Ks * std::pow(std::max(dot(p.normal, (wo + wi).normalization()), 0.0f), Ns) * (Ns + 2) / PI * 0.5f;
-			}
-		}
-		else
-			abedo = Kd / PI;
+		Vec f_r  = Ks * std::pow(std::max(dot(p.normal, (wo + wi).normalization()), 0.0f), Ns) * (Ns + 2) / PI * 0.5f + Kd / PI;
 
 		if (p.material->image_texture != nullptr)
 		{
-			abedo *= (p.material->image_texture->getColor(p.uv.u, p.uv.v));
+			f_r *= (p.material->image_texture->getColor(p.uv.u, p.uv.v));
 		}
 
-		return abedo;
+		return f_r;
 	}
 
 	Color getTextureColor(float u, float v)
